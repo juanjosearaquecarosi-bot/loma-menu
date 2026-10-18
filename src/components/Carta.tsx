@@ -1,5 +1,6 @@
 import type { Categoria, Item, Negocio } from '../types'
-import { numero } from '../lib/format'
+import { numero, numeroMiles } from '../lib/format'
+import { agregar, esPedible, monedaDeItem, quitar, type Carrito } from '../lib/carrito'
 
 function Foto({ item }: { item: Item }) {
   if (!item.imagen) return null
@@ -7,34 +8,68 @@ function Foto({ item }: { item: Item }) {
 }
 
 function PrecioUnico({ item, moneda }: { item: Item; moneda: string }) {
+  const esPesos = moneda === '$' || numero(item.precio!) === numeroMiles(item.precio!)
   if (item.precio == null) return <span className="precio sin">Consultar</span>
   return (
     <span className="precio">
       <small>{item.moneda ?? moneda}</small>
-      {numero(item.precio)}
+      {esPesos ? numeroMiles(item.precio) : numero(item.precio)}
     </span>
   )
 }
 
-function Lista({ c, moneda }: { c: Categoria; moneda: string }) {
+function Lista({
+  c,
+  n,
+  carrito,
+  setCarrito,
+}: {
+  c: Categoria
+  n: Negocio
+  carrito: Carrito
+  setCarrito: (f: (c: Carrito) => Carrito) => void
+}) {
   return (
     <ul className="items">
-      {c.items.map((it) => (
-        <li key={it.id} className="item">
-          <Foto item={it} />
-          <div className="txt">
-            <span className="nombre">{it.nombre}</span>
-            {it.descripcion && <span className="desc">{it.descripcion}</span>}
-          </div>
-          <span className="relleno" aria-hidden="true" />
-          <PrecioUnico item={it} moneda={moneda} />
-        </li>
-      ))}
+      {c.items.map(it => {
+        const pedible = esPedible(it)
+        const enCar = carrito[it.id]?.cantidad ?? 0
+        return (
+          <li key={it.id} className="item">
+            <Foto item={it} />
+            <div className="txt">
+              <span className="nombre">{it.nombre}</span>
+              {it.descripcion && <span className="desc">{it.descripcion}</span>}
+              {pedible && (
+                <span className="item-acciones">
+                  {enCar > 0 ? (
+                    <>
+                      <button type="button" className="qty" onClick={() => setCarrito(f => quitar(f, it.id))} aria-label={`Quitar un ${it.nombre}`}>
+                        −
+                      </button>
+                      <span className="qty-num" aria-live="polite">{enCar}</span>
+                      <button type="button" className="qty" onClick={() => setCarrito(f => agregar(f, c, it))} aria-label={`Agregar un ${it.nombre}`}>
+                        +
+                      </button>
+                    </>
+                  ) : (
+                    <button type="button" className="agregar" onClick={() => setCarrito(f => agregar(f, c, it))}>
+                      Agregar
+                    </button>
+                  )}
+                </span>
+              )}
+            </div>
+            <span className="relleno" aria-hidden="true" />
+            <PrecioUnico item={it} moneda={monedaDeItem(n, c, it)} />
+          </li>
+        )
+      })}
     </ul>
   )
 }
 
-function Tamanos({ c, moneda }: { c: Categoria; moneda: string }) {
+function Tamanos({ c, n }: { c: Categoria; n: Negocio }) {
   const cols = c.columnas ?? []
   return (
     <div className="tabla-wrap">
@@ -45,7 +80,7 @@ function Tamanos({ c, moneda }: { c: Categoria; moneda: string }) {
             <th scope="col" className="sr">
               Producto
             </th>
-            {cols.map((col) => (
+            {cols.map(col => (
               <th key={col.id} scope="col">
                 {col.label}
               </th>
@@ -53,13 +88,13 @@ function Tamanos({ c, moneda }: { c: Categoria; moneda: string }) {
           </tr>
         </thead>
         <tbody>
-          {c.items.map((it) => (
+          {c.items.map(it => (
             <tr key={it.id}>
               <th scope="row">
                 <span className="nombre">{it.nombre}</span>
                 {it.descripcion && <span className="desc">{it.descripcion}</span>}
               </th>
-              {cols.map((col) => {
+              {cols.map(col => {
                 const v = it.precios?.[col.id]
                 return (
                   <td key={col.id}>
@@ -69,7 +104,7 @@ function Tamanos({ c, moneda }: { c: Categoria; moneda: string }) {
                       </span>
                     ) : (
                       <span className="precio">
-                        <small>{moneda}</small>
+                        <small>{n.moneda}</small>
                         {numero(v)}
                       </span>
                     )}
@@ -84,7 +119,17 @@ function Tamanos({ c, moneda }: { c: Categoria; moneda: string }) {
   )
 }
 
-export function Carta({ n, numeroInicial }: { n: Negocio; numeroInicial: number }) {
+export function Carta({
+  n,
+  numeroInicial,
+  carrito,
+  setCarrito,
+}: {
+  n: Negocio
+  numeroInicial: number
+  carrito: Carrito
+  setCarrito: (f: (c: Carrito) => Carrito) => void
+}) {
   return (
     <>
       {n.categorias.map((c, i) => (
@@ -96,7 +141,7 @@ export function Carta({ n, numeroInicial }: { n: Negocio; numeroInicial: number 
             <h2 id={`t-${c.id}`}>{c.nombre}</h2>
           </header>
           {c.nota && <p className="nota">{c.nota}</p>}
-          {c.columnas ? <Tamanos c={c} moneda={n.moneda} /> : <Lista c={c} moneda={n.moneda} />}
+          {c.columnas ? <Tamanos c={c} n={n} /> : <Lista c={c} n={n} carrito={carrito} setCarrito={setCarrito} />}
         </section>
       ))}
     </>

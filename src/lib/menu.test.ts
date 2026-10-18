@@ -3,8 +3,10 @@ import lomaLinda from '../data/loma-linda.json'
 import enlaces from '../data/enlaces.json'
 import type { Negocio } from '../types'
 import { almuerzoDe, diaActual } from './horario'
-import { normalizar, numero } from './format'
+import { normalizar, numero, numeroMiles } from './format'
 import { buscarEnAlmuerzo, buscarEnCarta } from './busqueda'
+import { numeroSemanaISO, paletaActiva } from './tema'
+import { agregar, mensajePedido, quitar, totalItems, totalMonto, vaciar, type Carrito } from './carrito'
 
 const n = lomaLinda as unknown as Negocio
 
@@ -26,6 +28,76 @@ describe('horario (America/Caracas)', () => {
     const l = almuerzoDe(n.almuerzo, 'lunes')
     expect(l.rotativo?.nombre).toBe('Gordon Blue')
     expect(l.platoDelDia?.nombre).toBe('Alas de pollo en BBQ')
+  })
+})
+
+describe('formato de miles (pesos)', () => {
+  it('separa los miles con punto', () => {
+    expect(numeroMiles(4000)).toBe('4.000')
+    expect(numeroMiles(3000)).toBe('3.000')
+    expect(numeroMiles(15000)).toBe('15.000')
+    expect(numeroMiles(500)).toBe('500')
+  })
+})
+
+describe('tema semanal (claro / oscuro)', () => {
+  it('número de semana ISO es estable en fechas conocidas', () => {
+    // 2026-01-01 cae en la semana 1; 2026-10-18 en la semana 42
+    expect(numeroSemanaISO(new Date('2026-01-01'))).toBe(1)
+    expect(numeroSemanaISO(new Date('2026-10-18'))).toBe(42)
+  })
+  it('alterna entre claro y oscuro según la semana', () => {
+    const par = paletaActiva(n.tema, 'auto', new Date('2026-10-18')) // semana 42 → claro
+    const impar = paletaActiva(n.tema, 'auto', new Date('2026-10-11')) // semana 41 → oscuro
+    expect(par.fondo).toBe(n.tema.claro!.fondo)
+    expect(impar.fondo).toBe(n.tema.oscuro!.fondo)
+  })
+  it('forzar tema omite la rotación', () => {
+    expect(paletaActiva(n.tema, 'oscuro', new Date('2026-10-18')).fondo).toBe(n.tema.oscuro!.fondo)
+  })
+})
+
+describe('carrito', () => {
+  const pasta = n.categorias.find(c => c.id === 'empanadas')!
+  const emp = pasta.items[0]
+
+  it('agrega, suma y quita', () => {
+    let car: Carrito = vaciar()
+    car = agregar(car, pasta, emp)
+    car = agregar(car, pasta, emp)
+    expect(totalItems(car)).toBe(2)
+    expect(totalMonto(car)).toBe(8000)
+    car = quitar(car, emp.id)
+    expect(totalItems(car)).toBe(1)
+    car = quitar(car, emp.id)
+    expect(totalItems(car)).toBe(0)
+  })
+
+  it('mensaje de WhatsApp lleva nombre, cantidad y total formateado en miles', () => {
+    let car: Carrito = vaciar()
+    car = agregar(car, pasta, emp)
+    const msg = mensajePedido(n, car, 'sin cebolla')
+    expect(msg).toContain('Pedido · Loma Linda')
+    expect(msg).toContain('1 × Carne mechada — $4.000')
+    expect(msg).toContain('*Total:* $4.000')
+    expect(msg).toContain('Nota: sin cebolla')
+  })
+})
+
+describe('secciones nuevas', () => {
+  it('hay empanadas y pasteles en pesos', () => {
+    const empanadas = n.categorias.find(c => c.id === 'empanadas')
+    const pasteles = n.categorias.find(c => c.id === 'pasteles')
+    expect(empanadas?.items.map(i => i.nombre)).toEqual(['Carne mechada', 'Pollo', 'Mixta'])
+    expect(pasteles?.items.map(i => i.precio)).toEqual([3000, 3000, 3000, 3000, 3000, 3000, 4000])
+    expect(empanadas?.items.every(i => i.precio === 4000)).toBe(true)
+  })
+
+  it('los precios de la carta en euros no cambiaron vs. el BPM de referencia', () => {
+    const cafes = n.categorias.find(c => c.id === 'cafes')!
+    expect(cafes.items.find(i => i.id === 'americano')!.precios).toEqual({ pequeno: 2, mediano: 3, grande: 4, extragrande: 4.5 })
+    const hb = n.categorias.find(c => c.id === 'hamburguesas')!
+    expect(hb.items.find(i => i.id === 'hb-especial')!.precio).toBe(8.5)
   })
 })
 

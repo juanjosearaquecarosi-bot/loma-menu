@@ -5,20 +5,44 @@
   "lema": "Sabor que reconforta, tradición que nos une.",
   "ciudad_frase": "Hecho en el corazón de San Cristóbal",
   "moneda": "€",
+  "moneda_pesos": "$",
   "zona_horaria": "America/Caracas",
-  "tema": {
-    "fondo": "#F6F0E4",
-    "tinta": "#2B1D14",
-    "oscuro": "#2B1D14",
-    "acento": "#E2611B",
-    "acento_texto": "#A8430C",
-    "dorado": "#E8A92B",
-    "verde": "#2F6B3A"
+  "logos": {
+    "claro": "/logo-claro.jpg",
+    "oscuro": "/logo-negro.jpg"
   },
-  "enlaces": {},
+  "tema": {
+    "claro": {
+      "fondo": "#F6F0E4",
+      "tinta": "#211512",
+      "oscuro": "#211512",
+      "acento": "#E8672A",
+      "acento_texto": "#B44A14",
+      "dorado": "#E8A92B",
+      "verde": "#2F6B3A"
+    },
+    "oscuro": {
+      "fondo": "#050505",
+      "tinta": "#F1E9DF",
+      "oscuro": "#D8490E",
+      "acento": "#FF7B33",
+      "acento_texto": "#FF9558",
+      "dorado": "#F4B942",
+      "verde": "#7FBF8E"
+    }
+  },
+  "enlaces": {
+    "whatsapp": "",
+    "whatsapp_mensaje": "¡Hola! Escribo desde el menú digital de Loma Linda para hacer un pedido.",
+    "instagram": "",
+    "email": "",
+    "direccion": "",
+    "wifi": null,
+    "pagos": []
+  },
   "suscripcion": { "estado": "activa", "vence": null },
   "almuerzo": {
-    "titulo": "Menú de almuerzo",
+    "titulo": "Almuerzos",
     "incluye": ["Sopa", "Contorno", "Ensalada", "Jugo"],
     "platos_fijos": [
       { "nombre": "Pechuga", "detalle": "a la plancha / ajillo" },
@@ -62,6 +86,46 @@
     "dias_sin_servicio": ["domingo"]
   },
   "categorias": [
+    {
+      "id": "desayunos",
+      "nombre": "Desayunos",
+      "grupo": "comida",
+      "nota": "Servidos todo el día. Pregunta por las opciones del día.",
+      "items": [
+        { "id": "ds-cafe", "nombre": "Café con leche", "precio": null },
+        { "id": "ds-arepa", "nombre": "Arepa", "precio": null },
+        { "id": "ds-huevos", "nombre": "Huevos al gusto", "precio": null },
+        { "id": "ds-empanada-desayuno", "nombre": "Empanada", "precio": null }
+      ]
+    },
+    {
+      "id": "empanadas",
+      "nombre": "Empanadas",
+      "grupo": "comida",
+      "moneda": "$",
+      "nota": "Todas a $4.000 cada una.",
+      "items": [
+        { "id": "emp-carne-mechada", "nombre": "Carne mechada", "precio": 4000 },
+        { "id": "emp-pollo", "nombre": "Pollo", "precio": 4000 },
+        { "id": "emp-mixta", "nombre": "Mixta", "precio": 4000 }
+      ]
+    },
+    {
+      "id": "pasteles",
+      "nombre": "Pasteles",
+      "grupo": "comida",
+      "moneda": "$",
+      "nota": "Todas a $3.000 cada una, excepto la especial a $4.000.",
+      "items": [
+        { "id": "pt-carne-mechada", "nombre": "Carne mechada", "precio": 3000 },
+        { "id": "pt-pollo", "nombre": "Pollo", "precio": 3000 },
+        { "id": "pt-arroz-carne", "nombre": "Arroz con carne", "precio": 3000 },
+        { "id": "pt-queso", "nombre": "Queso", "precio": 3000 },
+        { "id": "pt-queso-bocadillo", "nombre": "Queso con bocadillo", "precio": 3000 },
+        { "id": "pt-mixto", "nombre": "Mixto", "precio": 3000 },
+        { "id": "pt-pollo-maiz-tocineta", "nombre": "Pollo, maíz y tocineta", "precio": 4000 }
+      ]
+    },
     {
       "id": "cafes",
       "nombre": "Cafés",

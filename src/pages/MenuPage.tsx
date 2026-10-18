@@ -3,11 +3,14 @@ import { useParams } from 'react-router-dom'
 import type { Negocio } from '../types'
 import { getNegocio } from '../lib/repo'
 import { buscarEnAlmuerzo, buscarEnCarta } from '../lib/busqueda'
-import { numero } from '../lib/format'
-import { Emblema } from '../components/Marca'
+import { numero, numeroMiles } from '../lib/format'
+import { paletaActiva, logoActivo } from '../lib/tema'
+import { agregar, esPedible, monedaDeItem, vaciar, type Carrito } from '../lib/carrito'
+import { Bienvenida } from '../components/Bienvenida'
 import { Enlaces } from '../components/Enlaces'
 import { Almuerzo } from '../components/Almuerzo'
 import { Carta } from '../components/Carta'
+import { CarritoPanel } from '../components/CarritoPanel'
 import { NoEncontrado } from './NoEncontrado'
 
 export function MenuPage() {
@@ -15,11 +18,12 @@ export function MenuPage() {
   const [n, setN] = useState<Negocio | null | undefined>(undefined)
   const [q, setQ] = useState('')
   const [activa, setActiva] = useState('almuerzo')
+  const [carrito, setCarrito] = useState<Carrito>({})
   const navRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
     let vivo = true
-    getNegocio(slug).then((r) => vivo && setN(r))
+    getNegocio(slug).then(r => vivo && setN(r))
     return () => {
       vivo = false
     }
@@ -34,18 +38,17 @@ export function MenuPage() {
     if (!n || q) return
     const secs = Array.from(document.querySelectorAll<HTMLElement>('[data-sec]'))
     const io = new IntersectionObserver(
-      (es) => {
-        const vis = es.filter((e) => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)
+      es => {
+        const vis = es.filter(e => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)
         if (vis[0]) setActiva(vis[0].target.id)
       },
       { rootMargin: '-96px 0px -65% 0px' },
     )
-    secs.forEach((s) => io.observe(s))
+    secs.forEach(s => io.observe(s))
     return () => io.disconnect()
   }, [n, q])
 
   // Mantiene visible el botón activo dentro de la barra horizontal.
-  // (Se mueve solo la barra: scrollIntoView también movería la página y cancelaría el scroll suave.)
   useEffect(() => {
     const nav = navRef.current
     const b = nav?.querySelector<HTMLElement>('[aria-current="true"]')
@@ -60,17 +63,19 @@ export function MenuPage() {
   if (n === undefined) return <div className="cargando" role="status">Cargando menú…</div>
   if (n === null) return <NoEncontrado />
 
+  const p = paletaActiva(n.tema)
   const style = {
-    '--fondo': n.tema.fondo,
-    '--tinta': n.tema.tinta,
-    '--oscuro': n.tema.oscuro,
-    '--acento': n.tema.acento,
-    '--acento-texto': n.tema.acento_texto,
-    '--dorado': n.tema.dorado,
-    '--verde': n.tema.verde,
+    '--fondo': p.fondo,
+    '--tinta': p.tinta,
+    '--oscuro': p.oscuro,
+    '--acento': p.acento,
+    '--acento-texto': p.acento_texto,
+    '--dorado': p.dorado,
+    '--verde': p.verde,
   } as React.CSSProperties
+  const logo = logoActivo(n, p)
 
-  const secciones = [{ id: 'almuerzo', nombre: 'Almuerzo' }, ...n.categorias.map((c) => ({ id: c.id, nombre: c.nombre }))]
+  const secciones = [{ id: 'almuerzo', nombre: 'Almuerzo' }, ...n.categorias.map(c => ({ id: c.id, nombre: c.nombre }))]
   const buscando = q.trim().length > 0
 
   return (
@@ -79,13 +84,9 @@ export function MenuPage() {
         Saltar al contenido
       </a>
 
+      {/* -------- Bienvenida / hero con logo real -------- */}
       <header className="hero">
-        <Emblema />
-        <p className="sobre">Café · Repostería · Comida</p>
-        <h1>{n.nombre}</h1>
-        <p className="subtitulo">{n.subtitulo}</p>
-        <p className="lema">{n.lema}</p>
-        <Enlaces e={n.enlaces} />
+        <Bienvenida n={n} />
       </header>
 
       {n.suscripcion.estado === 'vencida' && (
@@ -104,9 +105,9 @@ export function MenuPage() {
             type="search"
             inputMode="search"
             autoComplete="off"
-            placeholder="Buscar: pizza, latte, pechuga…"
+            placeholder="Buscar: empanada, latte, pechuga…"
             value={q}
-            onChange={(e) => setQ(e.target.value)}
+            onChange={e => setQ(e.target.value)}
           />
           {buscando && (
             <button type="button" className="limpiar" onClick={() => setQ('')} aria-label="Borrar búsqueda">
@@ -116,12 +117,12 @@ export function MenuPage() {
         </div>
         {!buscando && (
           <nav ref={navRef} className="cats" aria-label="Categorías">
-            {secciones.map((s) => (
+            {secciones.map(s => (
               <a
                 key={s.id}
                 href={`#${s.id}`}
                 aria-current={activa === s.id ? 'true' : undefined}
-                onClick={(e) => {
+                onClick={e => {
                   e.preventDefault()
                   document.getElementById(s.id)?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' })
                   setActiva(s.id)
@@ -170,11 +171,16 @@ export function MenuPage() {
                         <span className="desc">{categoria.nombre}</span>
                       </div>
                       <span className="relleno" aria-hidden="true" />
+                      {esPedible(item) && (
+                        <button className="agregar" onClick={() => setCarrito(f => agregar(f, categoria, item))}>
+                          Agregar
+                        </button>
+                      )}
                       <span className="precio">
                         {item.precio != null ? (
                           <>
-                            <small>{item.moneda ?? n.moneda}</small>
-                            {numero(item.precio)}
+                            <small>{monedaDeItem(n, categoria, item)}</small>
+                            {monedaDeItem(n, categoria, item) === n.moneda_pesos ? numeroMiles(item.precio) : numero(item.precio)}
                           </>
                         ) : item.precios ? (
                           <>
@@ -194,17 +200,25 @@ export function MenuPage() {
         ) : (
           <>
             <Almuerzo n={n} />
-            <Carta n={n} numeroInicial={2} />
+            <Carta n={n} numeroInicial={2} carrito={carrito} setCarrito={setCarrito} />
           </>
         )}
       </main>
 
       <footer className="pie">
-        <Emblema size={48} />
+        {logo && <img className="pie-logo" src={logo} alt="" width="120" height="120" loading="lazy" />}
+        <Enlaces e={n.enlaces} />
         <p className="lema">{n.lema}</p>
         <p className="frase">{n.ciudad_frase}</p>
         <p className="firma">Menú digital · NFC Táchira</p>
       </footer>
+
+      {/* Barra + panel del pedido (solo si hay algo en el carrito) */}
+      <CarritoPanel n={n} carrito={carrito} setCarrito={f => setCarrito(f)} />
     </div>
   )
 }
+
+// Exponer vaciar por si el panel quiere hacerlo internamente
+export type { Carrito }
+export { vaciar }
