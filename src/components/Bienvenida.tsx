@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import type { Negocio } from '../types'
-import { logoActivo, paletaActiva } from '../lib/tema'
 
 /**
  * Pantalla de bienvenida: lo primero que ve el cliente al escanear el NFC/QR.
@@ -9,8 +8,7 @@ import { logoActivo, paletaActiva } from '../lib/tema'
  * Solo se muestran los accesos que el negocio haya configurado (nada inventado).
  */
 export function Bienvenida({ n }: { n: Negocio }) {
-  const paleta = paletaActiva(n.tema)
-  const logo = logoActivo(n, paleta)
+  const logo = n.logo
   const [copiado, setCopiado] = useState(false)
   const [verPagos, setVerPagos] = useState(false)
 

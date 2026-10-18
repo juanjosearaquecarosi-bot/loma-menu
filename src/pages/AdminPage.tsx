@@ -44,7 +44,7 @@ export function AdminPage() {
   if (n === null) return <NoEncontrado mensaje="Este negocio no existe." />
 
   return (
-    <div className="admin" style={{ '--acento': n.tema.oscuro?.acento ?? '#E8672A', '--fondo': '#F6F0E4', '--tinta': '#211512', '--suave': '#8a7a6e', '--linea': 'rgba(0,0,0,.15)', '--papel': '#fff', '--verde': '#2F6B3A' } as React.CSSProperties}>
+    <div className="admin" style={{ '--acento': n.temas?.negro?.acento ?? '#E8672A', '--fondo': '#F6F0E4', '--tinta': '#211512', '--suave': '#8a7a6e', '--linea': 'rgba(0,0,0,.15)', '--papel': '#fff', '--verde': '#2F6B3A' } as React.CSSProperties}>
       <header className="cab">
         <h1>Panel de {n.nombre}</h1>
       </header>

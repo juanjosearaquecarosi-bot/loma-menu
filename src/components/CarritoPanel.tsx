@@ -1,25 +1,26 @@
 import { useState } from 'react'
 import type { Negocio } from '../types'
-import { numero, numeroMiles } from '../lib/format'
-import { eliminar, linkWhatsApp, mensajePedido, monedaDeItem, quitar, totalItems, totalMonto, vaciar, type Carrito } from '../lib/carrito'
+import { numero } from '../lib/format'
+import { armarMensaje, cambiarCantidad, cantidadTotal, totalTexto, type DatosPedido, type Linea } from '../lib/carrito'
+import { waUrl } from '../lib/contacto'
 
 /** Barra inferior + panel deslizante con el resumen del pedido. */
-export function CarritoPanel({ n, carrito, setCarrito }: { n: Negocio; carrito: Carrito; setCarrito: (f: (c: Carrito) => Carrito) => void }) {
+export function CarritoPanel({ n, carrito, setCarrito }: { n: Negocio; carrito: Linea[]; setCarrito: (f: (c: Linea[]) => Linea[]) => void }) {
   const [abierto, setAbierto] = useState(false)
   const [nota, setNota] = useState('')
   const [enviado, setEnviado] = useState(false)
 
-  const items = totalItems(carrito)
-  const monto = totalMonto(carrito)
+  const items = cantidadTotal(carrito)
   const wa = n.enlaces.whatsapp?.replace(/\D/g, '')
 
   if (items === 0) return null
 
-  const montoFmt = numeroMiles(monto)
+  const montoFmt = totalTexto(carrito, n.moneda)
   const enviar = () => {
     if (!wa) return
-    const msg = mensajePedido(n, carrito, nota)
-    open(linkWhatsApp(wa, msg), '_blank')
+    const datos: DatosPedido = { tipo: 'retiro', nombre: '', direccion: '', notas: nota }
+    const url = waUrl(wa, armarMensaje(n.nombre, n.moneda, carrito, datos))
+    if (url) open(url, '_blank')
     setEnviado(true)
     setTimeout(() => setEnviado(false), 4000)
   }
@@ -31,8 +32,7 @@ export function CarritoPanel({ n, carrito, setCarrito }: { n: Negocio; carrito: 
           <span className="carrito-icono" aria-hidden="true">
             🛒
           </span>
-          {items} {items === 1 ? 'ítem' : 'ítems'} · {n.moneda_pesos ?? '$'}
-          {montoFmt}
+          {items} {items === 1 ? 'ítem' : 'ítems'} · {montoFmt}
         </button>
       )}
 
@@ -47,31 +47,30 @@ export function CarritoPanel({ n, carrito, setCarrito }: { n: Negocio; carrito: 
             </header>
 
             <ul className="carrito-items">
-              {Object.values(carrito).map(l => (
-                <li key={l.item.id} className="carrito-item">
+              {carrito.map(l => (
+                <li key={l.clave} className="carrito-item">
                   <div className="txt">
-                    <span className="nombre">{l.item.nombre}</span>
-                    <span className="desc">{l.categoria.nombre}</span>
+                    <span className="nombre">{l.nombre}</span>
+                    {l.variante && <span className="desc">{l.variante}</span>}
                   </div>
                   <div className="cant">
-                    <button onClick={() => setCarrito(f => quitar(f, l.item.id))} aria-label={`Quitar un ${l.item.nombre}`}>
+                    <button onClick={() => setCarrito(f => cambiarCantidad(f, l.clave, -1))} aria-label={`Quitar un ${l.nombre}`}>
                       −
                     </button>
                     <span aria-live="polite">{l.cantidad}</span>
-                    <button
-                      onClick={() => setCarrito(f => ({ ...f, [l.item.id]: { ...f[l.item.id], cantidad: f[l.item.id].cantidad + 1 } }))}
-                      aria-label={`Agregar un ${l.item.nombre}`}
-                    >
+                    <button onClick={() => setCarrito(f => cambiarCantidad(f, l.clave, 1))} aria-label={`Agregar un ${l.nombre}`}>
                       +
                     </button>
                   </div>
                   <span className="precio">
-                    <small>{monedaDeItem(n, l.categoria, l.item)}</small>
-                    {monedaDeItem(n, l.categoria, l.item) === n.moneda_pesos
-                      ? numeroMiles(l.item.precio! * l.cantidad)
-                      : numero(l.item.precio! * l.cantidad)}
+                    <small>{l.moneda}</small>
+                    {numero(l.precio * l.cantidad)}
                   </span>
-                  <button className="borrar" onClick={() => setCarrito(f => eliminar(f, l.item.id))} aria-label={`Eliminar ${l.item.nombre} del pedido`}>
+                  <button
+                    className="borrar"
+                    onClick={() => setCarrito(f => f.filter(x => x.clave !== l.clave))}
+                    aria-label={`Eliminar ${l.nombre} del pedido`}
+                  >
                     🗑
                   </button>
                 </li>
@@ -91,13 +90,10 @@ export function CarritoPanel({ n, carrito, setCarrito }: { n: Negocio; carrito: 
             <footer className="carrito-pie">
               <div className="total">
                 <span className="etq">Total</span>
-                <strong>
-                  {n.moneda_pesos ?? '$'}
-                  {montoFmt}
-                </strong>
+                <strong>{montoFmt}</strong>
               </div>
               <div className="acciones">
-                <button className="secundario" onClick={() => setCarrito(vaciar)}>
+                <button className="secundario" onClick={() => setCarrito(() => [])}>
                   Vaciar
                 </button>
                 {wa ? (
