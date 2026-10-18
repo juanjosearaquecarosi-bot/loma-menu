@@ -1,92 +1,76 @@
-import type { Categoria, Item, Negocio } from '../types'
-import { numero, numeroMiles } from '../lib/format'
+import { precio } from './format'
 
-/** El carrito solo admite ítems con precio único (no versiones por tamaño). */
-export interface LineaCarrito {
-  item: Item
-  categoria: Categoria
+export interface Linea {
+  clave: string
+  nombre: string
+  variante?: string
+  precio: number
+  moneda: string
   cantidad: number
 }
 
-export type Carrito = Record<string, LineaCarrito>
+export type TipoPedido = 'delivery' | 'retiro'
 
-/** Determina si un ítem es "pedible" (precio único definido). */
-export function esPedible(item: Item): boolean {
-  return typeof item.precio === 'number'
+export interface DatosPedido {
+  tipo: TipoPedido
+  nombre: string
+  direccion: string
+  notas: string
 }
 
-/** Moneda que se muestra para el ítem (hereda la de la categoría si tiene una). */
-export function monedaDeItem(n: Negocio, c: Categoria, item: Item): string {
-  return item.moneda ?? c.moneda ?? n.moneda
+const r2 = (n: number) => Math.round(n * 100) / 100
+export const MAX_CANTIDAD = 20
+
+export function agregar(lineas: Linea[], nueva: Omit<Linea, 'cantidad'>): Linea[] {
+  const i = lineas.findIndex((l) => l.clave === nueva.clave)
+  if (i === -1) return [...lineas, { ...nueva, cantidad: 1 }]
+  return lineas.map((l, j) => (j === i ? { ...l, cantidad: Math.min(MAX_CANTIDAD, l.cantidad + 1) } : l))
 }
 
-export function agregar(car: Carrito, c: Categoria, item: Item): Carrito {
-  const previa = car[item.id]
-  return { ...car, [item.id]: { item, categoria: c, cantidad: (previa?.cantidad ?? 0) + 1 } }
+export function cambiarCantidad(lineas: Linea[], clave: string, delta: number): Linea[] {
+  return lineas
+    .map((l) => (l.clave === clave ? { ...l, cantidad: Math.min(MAX_CANTIDAD, l.cantidad + delta) } : l))
+    .filter((l) => l.cantidad > 0)
 }
 
-export function quitar(car: Carrito, id: string): Carrito {
-  const linea = car[id]
-  if (!linea) return car
-  if (linea.cantidad <= 1) {
-    const copia = { ...car }
-    delete copia[id]
-    return copia
-  }
-  return { ...car, [id]: { ...linea, cantidad: linea.cantidad - 1 } }
+export function cantidadTotal(lineas: Linea[]): number {
+  return lineas.reduce((s, l) => s + l.cantidad, 0)
 }
 
-export function eliminar(car: Carrito, id: string): Carrito {
-  const copia = { ...car }
-  delete copia[id]
-  return copia
+/** Totales por moneda: el menú mezcla € y COP y no se pueden sumar entre sí. La moneda principal va primero. */
+export function totales(lineas: Linea[], monedaPrincipal: string): { moneda: string; total: number }[] {
+  const m = new Map<string, number>()
+  for (const l of lineas) m.set(l.moneda, r2((m.get(l.moneda) ?? 0) + l.precio * l.cantidad))
+  return [...m.entries()]
+    .map(([moneda, total]) => ({ moneda, total }))
+    .sort((a, b) => (a.moneda === monedaPrincipal ? -1 : b.moneda === monedaPrincipal ? 1 : 0))
 }
 
-export function vaciar(): Carrito {
-  return {}
+export function totalTexto(lineas: Linea[], monedaPrincipal: string): string {
+  return totales(lineas, monedaPrincipal)
+    .map((t) => precio(t.total, t.moneda))
+    .join(' + ')
 }
 
-export function totalItems(car: Carrito): number {
-  return Object.values(car).reduce((s, l) => s + l.cantidad, 0)
+export function validarPedido(lineas: Linea[], d: DatosPedido): string | null {
+  if (!lineas.length) return 'Agrega al menos un producto.'
+  if (!d.nombre.trim()) return 'Escribe tu nombre.'
+  if (d.tipo === 'delivery' && !d.direccion.trim()) return 'Escribe la dirección de entrega.'
+  return null
 }
 
-export function totalMonto(car: Carrito): number {
-  return Object.values(car).reduce((s, l) => s + l.cantidad * (l.item.precio ?? 0), 0)
-}
+/** Quita saltos de línea y caracteres de control de lo que escribió el cliente. */
+const limpio = (s: string, max: number) => s.replace(/[\u0000-\u001f\u007f]+/g, ' ').trim().slice(0, max)
 
-/**
- * Mensaje de WhatsApp organizado:
- *   1 x Carne mechada — $4.000
- *   1 x Latte (Pequeño) — €2
- *   Total: ...
- */
-export function mensajePedido(n: Negocio, car: Carrito, nota?: string): string {
-  const lineas: string[] = [`*Pedido · ${n.nombre}*`, '']
-  const lineasItem = Object.values(car).map(l => {
-    const m = monedaDeItem(n, l.categoria, l.item)
-    const precioFmt = m === n.moneda_pesos ? numeroMiles(l.item.precio!) : numero(l.item.precio!)
-    return `${l.cantidad} × ${l.item.nombre} — ${m}${precioFmt}`
+export function armarMensaje(nombreNegocio: string, monedaPrincipal: string, lineas: Linea[], d: DatosPedido): string {
+  const filas = lineas.map((l) => {
+    const nom = l.variante ? `${l.nombre} (${l.variante})` : l.nombre
+    return `• ${l.cantidad} × ${nom} — ${precio(r2(l.precio * l.cantidad), l.moneda)}`
   })
-  lineas.push(...lineasItem)
-
-  // Agrupar los totales por moneda (por si hay mezcla € / $).
-  const porMoneda = new Map<string, number>()
-  for (const l of Object.values(car)) {
-    const m = monedaDeItem(n, l.categoria, l.item)
-    porMoneda.set(m, (porMoneda.get(m) ?? 0) + l.cantidad * (l.item.precio ?? 0))
-  }
-  lineas.push('')
-  for (const [m, t] of porMoneda) {
-    const fmt = m === n.moneda_pesos ? numeroMiles(t) : numero(t)
-    lineas.push(`*Total:* ${m}${fmt}`)
-  }
-
-  if (nota?.trim()) {
-    lineas.push('', `Nota: ${nota.trim()}`)
-  }
-  return lineas.join('\n')
-}
-
-export function linkWhatsApp(numero: string, mensaje: string): string {
-  return `https://wa.me/${numero.replace(/\D/g, '')}?text=${encodeURIComponent(mensaje)}`
+  const out = [`Hola ${nombreNegocio}, quiero hacer un pedido:`, '', ...filas, '', `Total: ${totalTexto(lineas, monedaPrincipal)}`, '']
+  out.push(`Tipo: ${d.tipo === 'delivery' ? 'Delivery' : 'Retiro en el local'}`)
+  out.push(`Nombre: ${limpio(d.nombre, 60)}`)
+  if (d.tipo === 'delivery') out.push(`Dirección: ${limpio(d.direccion, 160)}`)
+  if (d.notas.trim()) out.push(`Notas: ${limpio(d.notas, 300)}`)
+  return out.join('\n')
 }

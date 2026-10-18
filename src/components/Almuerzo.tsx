@@ -34,7 +34,7 @@ export function Almuerzo({ n }: { n: Negocio }) {
         ))}
       </div>
 
-      <div id="panel-almuerzo" role="tabpanel" className="almuerzo-card">
+      <div id="panel-almuerzo" role="tabpanel" className="almuerzo-lista">
         <p className="kicker">
           {etiqueta.largo}
           {dia === hoy ? ' · hoy' : ''}
@@ -51,31 +51,39 @@ export function Almuerzo({ n }: { n: Negocio }) {
                   {p.detalle && <span className="detalle">{p.detalle}</span>}
                 </li>
               ))}
-              {a.rotativo && (
-                <li className="rota">
-                  <span className="nombre">{a.rotativo.nombre}</span>
-                  {a.rotativo.detalle && <span className="detalle">{a.rotativo.detalle}</span>}
-                </li>
-              )}
+              <li className="rota">
+                <span className="etq-sem">Plato de la semana</span>
+                {a.cuartoPlato ? (
+                  <>
+                    <span className="nombre">{a.cuartoPlato.nombre}</span>
+                    {a.cuartoPlato.detalle && <span className="detalle">{a.cuartoPlato.detalle}</span>}
+                  </>
+                ) : (
+                  <span className="detalle">Pregunta por el plato de esta semana</span>
+                )}
+              </li>
             </ul>
 
-            {a.platoDelDia ? (
-              <div className="plato-dia">
-                <span className="etq">Plato del día</span>
-                <span className="nombre">{a.platoDelDia.nombre}</span>
-                {a.platoDelDia.detalle && <span className="detalle">{a.platoDelDia.detalle}</span>}
-              </div>
-            ) : (
-              <div className="plato-dia">
-                <span className="etq">Plato del día</span>
+            <div className="plato-dia">
+              <span className="etq">Plato del día · {etiqueta.largo}</span>
+              {a.platoDelDia ? (
+                <>
+                  <span className="nombre">{a.platoDelDia.nombre}</span>
+                  {a.platoDelDia.detalle && <span className="detalle">{a.platoDelDia.detalle}</span>}
+                </>
+              ) : (
                 <span className="detalle">Pregunta por el plato de hoy</span>
-              </div>
-            )}
+              )}
+            </div>
 
-            <p className="incluye">
-              <span>Todos nuestros almuerzos vienen con</span>
-              <b>{n.almuerzo.incluye.join(' · ')}</b>
-            </p>
+            <div className="incluye">
+              <p>Todos nuestros almuerzos vienen con</p>
+              <ul className="tags">
+                {n.almuerzo.incluye.map((x) => (
+                  <li key={x}>{x}</li>
+                ))}
+              </ul>
+            </div>
           </>
         )}
       </div>

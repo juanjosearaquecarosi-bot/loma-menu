@@ -1,54 +1,69 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import type { Negocio } from '../types'
-import { getNegocio } from '../lib/repo'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
+import { useNegocio } from '../lib/repo'
 import { buscarEnAlmuerzo, buscarEnCarta } from '../lib/busqueda'
-import { numero, numeroMiles } from '../lib/format'
-import { paletaActiva, logoActivo } from '../lib/tema'
-import { agregar, esPedible, monedaDeItem, vaciar, type Carrito } from '../lib/carrito'
-import { Bienvenida } from '../components/Bienvenida'
+import { aplicarThemeColor, elegirTema, estiloTema } from '../lib/tema'
+import { Emblema } from '../components/Marca'
 import { Enlaces } from '../components/Enlaces'
 import { Almuerzo } from '../components/Almuerzo'
 import { Carta } from '../components/Carta'
-import { CarritoPanel } from '../components/CarritoPanel'
+import { Monto } from '../components/Monto'
+import { CarritoProvider } from '../components/Carrito'
 import { NoEncontrado } from './NoEncontrado'
 
 export function MenuPage() {
   const { slug = '' } = useParams()
-  const [n, setN] = useState<Negocio | null | undefined>(undefined)
+  const [sp] = useSearchParams()
+  const n = useNegocio(slug)
   const [q, setQ] = useState('')
   const [activa, setActiva] = useState('almuerzo')
-  const [carrito, setCarrito] = useState<Carrito>({})
+  const [barraH, setBarraH] = useState(120)
   const navRef = useRef<HTMLElement>(null)
-
-  useEffect(() => {
-    let vivo = true
-    getNegocio(slug).then(r => vivo && setN(r))
-    return () => {
-      vivo = false
-    }
-  }, [slug])
+  const barraRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (n) document.title = `${n.nombre} · ${n.subtitulo}`
   }, [n])
+
+  const temaId = n ? elegirTema(n, new Date(), sp.get('tema')) : null
+  useEffect(() => {
+    if (temaId) aplicarThemeColor(temaId.tema.fondo)
+  }, [temaId?.id])
+
+  // Altura real de la barra pegajosa: los títulos de sección se pegan justo debajo de ella.
+  useEffect(() => {
+    const el = barraRef.current
+    if (!el) return
+    const medir = () => setBarraH(Math.round(el.getBoundingClientRect().height))
+    medir()
+    const ro = new ResizeObserver(medir)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [n])
+
+  useEffect(() => {
+    document.documentElement.style.scrollPaddingTop = `${barraH + 64}px`
+    return () => {
+      document.documentElement.style.scrollPaddingTop = ''
+    }
+  }, [barraH])
 
   // Scroll-spy: resalta la sección visible en la barra de categorías.
   useEffect(() => {
     if (!n || q) return
     const secs = Array.from(document.querySelectorAll<HTMLElement>('[data-sec]'))
     const io = new IntersectionObserver(
-      es => {
-        const vis = es.filter(e => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)
+      (es) => {
+        const vis = es.filter((e) => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)
         if (vis[0]) setActiva(vis[0].target.id)
       },
-      { rootMargin: '-96px 0px -65% 0px' },
+      { rootMargin: `-${barraH + 8}px 0px -65% 0px` },
     )
-    secs.forEach(s => io.observe(s))
+    secs.forEach((s) => io.observe(s))
     return () => io.disconnect()
-  }, [n, q])
+  }, [n, q, barraH])
 
-  // Mantiene visible el botón activo dentro de la barra horizontal.
+  // Mantiene visible el botón activo dentro de la barra horizontal (se mueve solo la barra, no la página).
   useEffect(() => {
     const nav = navRef.current
     const b = nav?.querySelector<HTMLElement>('[aria-current="true"]')
@@ -63,162 +78,156 @@ export function MenuPage() {
   if (n === undefined) return <div className="cargando" role="status">Cargando menú…</div>
   if (n === null) return <NoEncontrado />
 
-  const p = paletaActiva(n.tema)
-  const style = {
-    '--fondo': p.fondo,
-    '--tinta': p.tinta,
-    '--oscuro': p.oscuro,
-    '--acento': p.acento,
-    '--acento-texto': p.acento_texto,
-    '--dorado': p.dorado,
-    '--verde': p.verde,
-  } as React.CSSProperties
-  const logo = logoActivo(n, p)
-
-  const secciones = [{ id: 'almuerzo', nombre: 'Almuerzo' }, ...n.categorias.map(c => ({ id: c.id, nombre: c.nombre }))]
+  const { id, tema } = elegirTema(n, new Date(), sp.get('tema'))
+  const style = { ...estiloTema(tema, id), '--barra-h': `${barraH}px` } as React.CSSProperties
+  const secciones = [{ id: 'almuerzo', nombre: 'Almuerzo' }, ...n.categorias.map((c) => ({ id: c.id, nombre: c.nombre }))]
   const buscando = q.trim().length > 0
 
   return (
-    <div className="app" style={style}>
-      <a className="saltar" href="#contenido">
-        Saltar al contenido
-      </a>
+    <div className={`raiz tema-${id}`} style={style}>
+    <CarritoProvider n={n}>
+      <div className="app">
+        <a className="saltar" href="#contenido">
+          Saltar al contenido
+        </a>
 
-      {/* -------- Bienvenida / hero con logo real -------- */}
-      <header className="hero">
-        <Bienvenida n={n} />
-      </header>
+        <header className="hero">
+          <div className="hero-marca">{n.logo ? <img className="logo" src={n.logo} alt="" width="120" height="80" /> : <Emblema />}</div>
+          <p className="sobre">Café · Repostería · Comida</p>
+          <h1>{n.nombre}</h1>
+          <p className="subtitulo">{n.subtitulo}</p>
+          <p className="lema">{n.lema}</p>
+          <Enlaces n={n} />
+        </header>
 
-      {n.suscripcion.estado === 'vencida' && (
-        <p className="aviso" role="status">
-          Este menú puede estar desactualizado. Consulta precios en el local.
-        </p>
-      )}
+        {n.suscripcion.estado === 'vencida' && (
+          <p className="aviso" role="status">
+            Este menú puede estar desactualizado. Consulta precios en el local.
+          </p>
+        )}
 
-      <div className="barra">
-        <div className="buscador">
-          <label htmlFor="buscar" className="sr">
-            Buscar en el menú
-          </label>
-          <input
-            id="buscar"
-            type="search"
-            inputMode="search"
-            autoComplete="off"
-            placeholder="Buscar: empanada, latte, pechuga…"
-            value={q}
-            onChange={e => setQ(e.target.value)}
-          />
-          {buscando && (
-            <button type="button" className="limpiar" onClick={() => setQ('')} aria-label="Borrar búsqueda">
-              ×
-            </button>
+        <div className="barra" ref={barraRef}>
+          <div className="buscador">
+            <label htmlFor="buscar" className="sr">
+              Buscar en el menú
+            </label>
+            <input
+              id="buscar"
+              type="search"
+              inputMode="search"
+              autoComplete="off"
+              placeholder="Buscar: pizza, latte, pechuga…"
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+            />
+            {buscando && (
+              <button type="button" className="limpiar" onClick={() => setQ('')} aria-label="Borrar búsqueda">
+                ×
+              </button>
+            )}
+          </div>
+          {!buscando && (
+            <nav ref={navRef} className="cats" aria-label="Categorías">
+              {secciones.map((s) => (
+                <a
+                  key={s.id}
+                  href={`#${s.id}`}
+                  aria-current={activa === s.id ? 'true' : undefined}
+                  onClick={(e) => {
+                    e.preventDefault()
+                    document.getElementById(s.id)?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' })
+                    setActiva(s.id)
+                  }}
+                >
+                  {s.nombre}
+                </a>
+              ))}
+            </nav>
           )}
         </div>
-        {!buscando && (
-          <nav ref={navRef} className="cats" aria-label="Categorías">
-            {secciones.map(s => (
-              <a
-                key={s.id}
-                href={`#${s.id}`}
-                aria-current={activa === s.id ? 'true' : undefined}
-                onClick={e => {
-                  e.preventDefault()
-                  document.getElementById(s.id)?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' })
-                  setActiva(s.id)
-                }}
-              >
-                {s.nombre}
-              </a>
-            ))}
-          </nav>
-        )}
+
+        <main id="contenido">
+          {buscando ? (
+            <section className="seccion resultados" aria-live="polite">
+              <header className="sec-cab">
+                <h2>Resultados</h2>
+              </header>
+              {rCarta.length + rAlm.length === 0 && <p className="vacio">No encontramos “{q}”. Prueba con otra palabra.</p>}
+              {rAlm.length > 0 && (
+                <>
+                  <h3 className="sub-grupo">Almuerzo</h3>
+                  <ul className="items">
+                    {rAlm.map((r, i) => (
+                      <li className="fila" key={i}>
+                        <div className="item">
+                          <div className="txt">
+                            <span className="nombre">{r.plato.nombre}</span>
+                            <span className="desc">
+                              {r.cuando}
+                              {r.plato.detalle ? ` · ${r.plato.detalle}` : ''}
+                            </span>
+                          </div>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+              {rCarta.length > 0 && (
+                <>
+                  <h3 className="sub-grupo">Carta</h3>
+                  <ul className="items">
+                    {rCarta.map(({ categoria, item }) => {
+                      const mon = item.moneda ?? n.moneda
+                      const desde = item.precios ? Object.values(item.precios).filter((v): v is number => v != null) : []
+                      return (
+                        <li className="fila" key={item.id}>
+                          <div className="item">
+                            <div className="txt">
+                              <span className="nombre">{item.nombre}</span>
+                              <span className="desc">
+                                {categoria.nombre}
+                                {item.subgrupo ? ` · ${item.subgrupo}` : ''}
+                              </span>
+                            </div>
+                            <span className="precio">
+                              {item.precio != null ? (
+                                <Monto valor={item.precio} moneda={mon} />
+                              ) : desde.length ? (
+                                <Monto valor={Math.min(...desde)} moneda={mon} prefijo="desde" />
+                              ) : (
+                                <span className="sin">Consultar</span>
+                              )}
+                            </span>
+                          </div>
+                        </li>
+                      )
+                    })}
+                  </ul>
+                </>
+              )}
+            </section>
+          ) : (
+            <>
+              <Almuerzo n={n} />
+              <Carta n={n} numeroInicial={2} />
+            </>
+          )}
+        </main>
+
+        <footer className="pie">
+          <Emblema size={56} className="en-oscuro" />
+          <p className="lema">{n.lema}</p>
+          <p className="frase">{n.ciudad_frase}</p>
+          {(n.enlaces.wifi || n.enlaces.pagos?.length) && (
+            <Link className="chip" to={`/b/${n.slug}`}>
+              Wi-Fi y métodos de pago
+            </Link>
+          )}
+          <p className="firma">Menú digital · NFC Táchira</p>
+        </footer>
       </div>
-
-      <main id="contenido">
-        {buscando ? (
-          <section className="seccion resultados" aria-live="polite">
-            <header className="sec-cab">
-              <h2>Resultados</h2>
-            </header>
-            {rCarta.length + rAlm.length === 0 && <p className="vacio">No encontramos “{q}”. Prueba con otra palabra.</p>}
-            {rAlm.length > 0 && (
-              <>
-                <h3 className="sub">Almuerzo</h3>
-                <ul className="items">
-                  {rAlm.map((r, i) => (
-                    <li className="item" key={i}>
-                      <div className="txt">
-                        <span className="nombre">{r.plato.nombre}</span>
-                        <span className="desc">
-                          {r.dia}
-                          {r.plato.detalle ? ` · ${r.plato.detalle}` : ''}
-                        </span>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )}
-            {rCarta.length > 0 && (
-              <>
-                <h3 className="sub">Carta</h3>
-                <ul className="items">
-                  {rCarta.map(({ categoria, item }) => (
-                    <li className="item" key={item.id}>
-                      <div className="txt">
-                        <span className="nombre">{item.nombre}</span>
-                        <span className="desc">{categoria.nombre}</span>
-                      </div>
-                      <span className="relleno" aria-hidden="true" />
-                      {esPedible(item) && (
-                        <button className="agregar" onClick={() => setCarrito(f => agregar(f, categoria, item))}>
-                          Agregar
-                        </button>
-                      )}
-                      <span className="precio">
-                        {item.precio != null ? (
-                          <>
-                            <small>{monedaDeItem(n, categoria, item)}</small>
-                            {monedaDeItem(n, categoria, item) === n.moneda_pesos ? numeroMiles(item.precio) : numero(item.precio)}
-                          </>
-                        ) : item.precios ? (
-                          <>
-                            <small>desde {n.moneda}</small>
-                            {numero(Math.min(...Object.values(item.precios).filter((v): v is number => v != null)))}
-                          </>
-                        ) : (
-                          <span className="sin">Consultar</span>
-                        )}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )}
-          </section>
-        ) : (
-          <>
-            <Almuerzo n={n} />
-            <Carta n={n} numeroInicial={2} carrito={carrito} setCarrito={setCarrito} />
-          </>
-        )}
-      </main>
-
-      <footer className="pie">
-        {logo && <img className="pie-logo" src={logo} alt="" width="120" height="120" loading="lazy" />}
-        <Enlaces e={n.enlaces} />
-        <p className="lema">{n.lema}</p>
-        <p className="frase">{n.ciudad_frase}</p>
-        <p className="firma">Menú digital · NFC Táchira</p>
-      </footer>
-
-      {/* Barra + panel del pedido (solo si hay algo en el carrito) */}
-      <CarritoPanel n={n} carrito={carrito} setCarrito={f => setCarrito(f)} />
+    </CarritoProvider>
     </div>
   )
 }
-
-// Exponer vaciar por si el panel quiere hacerlo internamente
-export type { Carrito }
-export { vaciar }

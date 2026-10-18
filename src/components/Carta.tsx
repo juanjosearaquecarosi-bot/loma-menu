@@ -1,67 +1,51 @@
 import type { Categoria, Item, Negocio } from '../types'
-import { numero, numeroMiles } from '../lib/format'
-import { agregar, esPedible, monedaDeItem, quitar, type Carrito } from '../lib/carrito'
+import { precio } from '../lib/format'
+import { useCarrito } from './Carrito'
+import { Monto } from './Monto'
 
 function Foto({ item }: { item: Item }) {
   if (!item.imagen) return null
   return <img className="foto" src={item.imagen} alt={item.nombre} loading="lazy" decoding="async" width="64" height="64" />
 }
 
-function PrecioUnico({ item, moneda }: { item: Item; moneda: string }) {
-  const esPesos = moneda === '$' || numero(item.precio!) === numeroMiles(item.precio!)
-  if (item.precio == null) return <span className="precio sin">Consultar</span>
-  return (
-    <span className="precio">
-      <small>{item.moneda ?? moneda}</small>
-      {esPesos ? numeroMiles(item.precio) : numero(item.precio)}
-    </span>
-  )
-}
+const PrecioTxt = Monto
 
-function Lista({
-  c,
-  n,
-  carrito,
-  setCarrito,
-}: {
-  c: Categoria
-  n: Negocio
-  carrito: Carrito
-  setCarrito: (f: (c: Carrito) => Carrito) => void
-}) {
+function Lista({ c, moneda }: { c: Categoria; moneda: string }) {
+  const { activo, agregar } = useCarrito()
+  let previo: string | undefined
   return (
     <ul className="items">
-      {c.items.map(it => {
-        const pedible = esPedible(it)
-        const enCar = carrito[it.id]?.cantidad ?? 0
+      {c.items.map((it) => {
+        const nuevoGrupo = it.subgrupo && it.subgrupo !== previo
+        previo = it.subgrupo
+        const mon = it.moneda ?? moneda
         return (
-          <li key={it.id} className="item">
-            <Foto item={it} />
-            <div className="txt">
-              <span className="nombre">{it.nombre}</span>
-              {it.descripcion && <span className="desc">{it.descripcion}</span>}
-              {pedible && (
-                <span className="item-acciones">
-                  {enCar > 0 ? (
-                    <>
-                      <button type="button" className="qty" onClick={() => setCarrito(f => quitar(f, it.id))} aria-label={`Quitar un ${it.nombre}`}>
-                        −
-                      </button>
-                      <span className="qty-num" aria-live="polite">{enCar}</span>
-                      <button type="button" className="qty" onClick={() => setCarrito(f => agregar(f, c, it))} aria-label={`Agregar un ${it.nombre}`}>
-                        +
-                      </button>
-                    </>
-                  ) : (
-                    <button type="button" className="agregar" onClick={() => setCarrito(f => agregar(f, c, it))}>
-                      Agregar
-                    </button>
-                  )}
+          <li key={it.id} className="fila">
+            {nuevoGrupo && <h3 className="sub-grupo">{it.subgrupo}</h3>}
+            <div className="item">
+              <Foto item={it} />
+              <div className="txt">
+                <span className="nombre">{it.nombre}</span>
+                {it.descripcion && <span className="desc">{it.descripcion}</span>}
+              </div>
+              {it.precio == null ? (
+                <span className="precio sin">Consultar</span>
+              ) : (
+                <span className="precio">
+                  <PrecioTxt valor={it.precio} moneda={mon} />
                 </span>
               )}
+              {activo && it.precio != null && (
+                <button
+                  type="button"
+                  className="mas"
+                  aria-label={`Agregar ${it.nombre}${it.subgrupo ? ` (${it.subgrupo})` : ''} al pedido`}
+                  onClick={() => agregar({ clave: it.id, nombre: it.nombre, variante: it.subgrupo, precio: it.precio!, moneda: mon })}
+                >
+                  +
+                </button>
+              )}
             </div>
-            <span className="relleno" aria-hidden="true" />
-            <PrecioUnico item={it} moneda={monedaDeItem(n, c, it)} />
           </li>
         )
       })}
@@ -69,7 +53,8 @@ function Lista({
   )
 }
 
-function Tamanos({ c, n }: { c: Categoria; n: Negocio }) {
+function Tamanos({ c, moneda }: { c: Categoria; moneda: string }) {
+  const { activo, agregar } = useCarrito()
   const cols = c.columnas ?? []
   return (
     <div className="tabla-wrap">
@@ -80,7 +65,7 @@ function Tamanos({ c, n }: { c: Categoria; n: Negocio }) {
             <th scope="col" className="sr">
               Producto
             </th>
-            {cols.map(col => (
+            {cols.map((col) => (
               <th key={col.id} scope="col">
                 {col.label}
               </th>
@@ -88,24 +73,33 @@ function Tamanos({ c, n }: { c: Categoria; n: Negocio }) {
           </tr>
         </thead>
         <tbody>
-          {c.items.map(it => (
+          {c.items.map((it) => (
             <tr key={it.id}>
               <th scope="row">
                 <span className="nombre">{it.nombre}</span>
                 {it.descripcion && <span className="desc">{it.descripcion}</span>}
               </th>
-              {cols.map(col => {
+              {cols.map((col) => {
                 const v = it.precios?.[col.id]
+                const mon = it.moneda ?? moneda
                 return (
                   <td key={col.id}>
                     {v == null ? (
                       <span className="nada" aria-label="no disponible">
                         ·
                       </span>
+                    ) : activo ? (
+                      <button
+                        type="button"
+                        className="precio precio-btn"
+                        aria-label={`Agregar ${it.nombre} ${col.label} al pedido, ${precio(v, mon)}`}
+                        onClick={() => agregar({ clave: `${it.id}|${col.id}`, nombre: it.nombre, variante: col.label, precio: v, moneda: mon })}
+                      >
+                        <PrecioTxt valor={v} moneda={mon} />
+                      </button>
                     ) : (
                       <span className="precio">
-                        <small>{n.moneda}</small>
-                        {numero(v)}
+                        <PrecioTxt valor={v} moneda={mon} />
                       </span>
                     )}
                   </td>
@@ -119,17 +113,8 @@ function Tamanos({ c, n }: { c: Categoria; n: Negocio }) {
   )
 }
 
-export function Carta({
-  n,
-  numeroInicial,
-  carrito,
-  setCarrito,
-}: {
-  n: Negocio
-  numeroInicial: number
-  carrito: Carrito
-  setCarrito: (f: (c: Carrito) => Carrito) => void
-}) {
+export function Carta({ n, numeroInicial }: { n: Negocio; numeroInicial: number }) {
+  const { activo } = useCarrito()
   return (
     <>
       {n.categorias.map((c, i) => (
@@ -140,8 +125,10 @@ export function Carta({
             </span>
             <h2 id={`t-${c.id}`}>{c.nombre}</h2>
           </header>
+          {c.horario && <p className="horario">{c.horario}</p>}
           {c.nota && <p className="nota">{c.nota}</p>}
-          {c.columnas ? <Tamanos c={c} n={n} /> : <Lista c={c} n={n} carrito={carrito} setCarrito={setCarrito} />}
+          {i === 0 && activo && <p className="nota pista">Toca + o el precio para armar tu pedido por WhatsApp.</p>}
+          {c.columnas ? <Tamanos c={c} moneda={n.moneda} /> : <Lista c={c} moneda={n.moneda} />}
         </section>
       ))}
     </>

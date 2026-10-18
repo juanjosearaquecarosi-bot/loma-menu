@@ -1,38 +1,37 @@
-# NFC Menu — MVP del menú público
+# NFC Menu — menú digital multi-negocio (MVP)
 
-Menú digital móvil, multi-negocio, accesible por NFC/QR. Primer negocio cargado: **Loma Linda Coffee House San Cristóbal** (transcrito de 18 imágenes).
+Primer negocio cargado: **Loma Linda Coffee House San Cristóbal**.
 
 ```bash
 npm install
-npm run dev        # http://localhost:5173/m/loma-linda
-npm test           # 22 pruebas (zona horaria, tema semanal, carrito, búsqueda, integridad de datos)
+npm run dev        # http://localhost:5173/b/loma-linda
+npm test           # 34 pruebas (horario/semana ISO, temas, formato, búsqueda, contacto, carrito, integridad de datos)
 npm run build      # tsc + vite build -> dist/ (Vercel: vercel.json ya reescribe a index.html)
 ```
 
 ## Rutas
-- `/m/:slug` menú público (bienvenida + carta + carrito)
-- `/m/:slug/admin` panel de administración local (borrador en `localStorage` + descarga de JSON)
-- `/q/:codigo` lo que se graba en el chip NFC y en el QR; resuelve el código a un negocio (hoy `demo-ll`). **Graba siempre `/q/<codigo>`, nunca `/m/<slug>`**: así puedes mover o renombrar el menú sin reprogramar stands.
+| Ruta | Qué es |
+|---|---|
+| `/q/:codigo` | Lo que se graba en el chip NFC y en el QR. Resuelve el código y lleva a `/b/:slug`. **Graba siempre `/q/<codigo>`, nunca `/m/<slug>`**: así puedes mover o renombrar el menú sin reprogramar stands. |
+| `/b/:slug` | Pantalla de bienvenida: logo, botón "Ver el menú", WhatsApp, Instagram, reseña, Wi-Fi (con QR para conectarse) y métodos de pago. Solo aparece lo que el negocio tiene configurado. |
+| `/m/:slug` | Menú: almuerzo por día, desayunos y carta, con buscador y carrito. |
+| `?tema=naranja` / `?tema=negro` | Previsualiza el tema (por defecto alterna cada semana). |
 
-## Qué incluye esta versión
-- **Bienvenida NFC/QR**: logo real del negocio (`public/logo-claro.jpg` / `public/logo-negro.jpg`), acceso al menú, WiFi, métodos de pago, Instagram y WhatsApp con mensaje predefinido. Solo muestra lo configurado.
-- **Menú digital**: separación visual entre categorías, títulos en naranja, buscador de productos.
-- **Secciones nuevas**: Desayunos (precios por confirmar), Empanadas ($4.000 c/u: carne mechada, pollo, mixta) y Pasteles ($3.000; pollo/maíz/tocineta $4.000). La carta impresa conserva sus precios en € sin convertir.
-- **Almuerzos**: 3 platos fijos (pechuga, bistec, chuleta) + rotación semanal de 3 sets + plato del día por día.
-- **Carrito**: agregar/quitar cantidades, resumen con nota, totales por moneda y envío del pedido por WhatsApp ordenado.
-- **Temas claro/oscuro**: rotación semanal automática (semana ISO par → claro, impar → oscuro) con el logo correspondiente.
-- **Admin (`/m/:slug/admin`)**: edita nombre, contacto, WiFi, métodos de pago, platos del día, productos y precios; guarda borrador en el dispositivo y descarga el JSON para publicarlo (reemplazar `src/data/<slug>.json`).
+## Datos de un negocio (`src/data/<slug>.json`)
+- `temas` + `tema_modo` (`auto` alterna cada semana ISO) + `tema_par` (qué tema usan las semanas pares).
+- `logo`: URL o ruta del logo. Si falta se muestra un emblema genérico de relleno.
+- `enlaces`: `whatsapp` (solo dígitos con código de país), `whatsapp_mensaje`, `instagram` (`@usuario` o URL), `google_review`, `wifi {red, clave, seguridad}`, `pagos [{metodo, detalle}]`.
+- `pedidos: {activo: true}`: activa el carrito. Solo funciona si hay `enlaces.whatsapp`.
+- `almuerzo`: `platos_fijos` (3 base), `cuarto_plato.actual` (cambia cada **semana**; `null` = "pregunta por el plato de la semana"), `plato_del_dia` (fijo por día de la semana), `dias_sin_servicio`.
+- `categorias[].items[]`: `precio` o `precios` por tamaño; `moneda` por ítem (los desayunos van en `COP`); `subgrupo` para subtítulos dentro de una categoría.
 
-## Datos que faltan por parte del cliente
-- Número de WhatsApp, Instagram, correo, dirección, RIF y mensajería de bienvenida oficial.
-- Red/clave del WiFi del local.
-- Métodos de pago con sus detalles.
-- Los precios de los Desayunos se dejaron en `null` (se muestran como "Consultar") hasta que el para presentar el cliente los confirme. No se inventó ningún precio.
+## Negocio de prueba (solo `npm run dev`)
+`/b/demo-pruebas` (código `demo-pr`) trae datos **ficticios** de WhatsApp, Instagram, Wi-Fi y pagos para ver todo funcionando. No existe en el build de producción (verificado).
 
 ## Agregar otro negocio
-1. Copia `src/data/loma-linda.json` como `src/data/<slug>.json` y cambia datos y `tema`.
+1. Copia `src/data/loma-linda.json` como `src/data/<slug>.json` y cambia los datos.
 2. Regístralo en `src/lib/repo.ts` y agrega su código en `src/data/enlaces.json`.
 3. Con Supabase: reemplaza `getNegocio` y `resolverEnlace` en `src/lib/repo.ts` (ver `supabase/migrations/001_nfc_menu_propuesta.sql`, **no aplicada**).
 
-## Qué no incluye (a propósito)
-Panel de administración, extractor foto→menú y pagos: viven en tu V1 / etapas siguientes. Las fotos de platos son opcionales (`imagen` por ítem); no hay fotos de relleno.
+## Qué NO incluye (a propósito)
+Panel de administración (login, edición de precios, plato de la semana, métodos de pago): vive en tu V1. Aquí solo está el lado público y el contrato de datos que ese panel debe escribir.

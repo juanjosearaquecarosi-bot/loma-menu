@@ -1,41 +1,44 @@
-import type { Negocio, Paleta, Tema } from '../types'
+import type { Negocio, Tema, TemaId } from '../types'
+import { semanaISO } from './horario'
 
 /**
- * Rotación semanal de temas claro/oscuro (identidad naranja/negra).
- * Semana ISO: si el número de semana es impar se usa el tema oscuro,
- * si es par el claro. Así el local cambia de look cada lunes sin tocar nada.
+ * Tema de la semana. En modo 'auto' alterna naranja/negro cada semana ISO:
+ * las semanas pares usan `tema_par` y las impares el otro.
+ * `forzado` (p. ej. ?tema=negro) sirve para previsualizar sin esperar a la otra semana.
  */
-export function numeroSemanaISO(ahora: Date = new Date()): number {
-  const d = new Date(Date.UTC(ahora.getFullYear(), ahora.getMonth(), ahora.getDate()))
-  const dia = d.getUTCDay() || 7 // lunes=1 ... domingo=7
-  d.setUTCDate(d.getUTCDate() + 4 - dia) // jueves de esa semana
-  const inicioAnio = new Date(Date.UTC(d.getUTCFullYear(), 0, 1))
-  return Math.ceil(((d.getTime() - inicioAnio.getTime()) / 86400000 + 1) / 7)
+export function elegirTema(n: Negocio, ahora: Date = new Date(), forzado?: string | null): { id: TemaId; tema: Tema } {
+  let id: TemaId
+  if (forzado === 'naranja' || forzado === 'negro') id = forzado
+  else if (n.tema_modo !== 'auto') id = n.tema_modo
+  else {
+    const par = semanaISO(n.zona_horaria, ahora) % 2 === 0
+    const otro: TemaId = n.tema_par === 'naranja' ? 'negro' : 'naranja'
+    id = par ? n.tema_par : otro
+  }
+  return { id, tema: n.temas[id] }
 }
 
-/** Devuelve la paleta activa según la semana ISO y forzarTema ('auto'|'claro'|'oscuro'). */
-export function paletaActiva(tema: Tema, forzar: 'auto' | 'claro' | 'oscuro' = 'auto', ahora: Date = new Date()): Paleta {
-  const claro: Paleta = tema.claro
-  const oscuro: Paleta = tema.oscuro
-
-  if (forzar === 'claro') return claro
-  if (forzar === 'oscuro') return oscuro
-
-  const semana = numeroSemanaISO(ahora)
-  return semana % 2 === 0 ? claro : oscuro
+export function estiloTema(t: Tema, id: TemaId): React.CSSProperties {
+  return {
+    '--fondo': t.fondo,
+    '--tinta': t.tinta,
+    '--titulo': t.titulo,
+    '--oscuro': t.oscuro,
+    '--claro': t.claro,
+    '--acento': t.acento,
+    '--sobre-acento': t.sobre_acento,
+    '--etiqueta': t.etiqueta,
+    colorScheme: id === 'negro' ? 'dark' : 'light',
+  } as React.CSSProperties
 }
 
-/** URL del logo real según la paleta activa (claro -> logo sobre fondo claro). */
-export function logoActivo(n: Negocio, activo: Paleta): string {
-  const esOscuro = normalizarHex(activo.fondo).luminancia < 0.45
-  return esOscuro ? n.logos?.oscuro : n.logos?.claro
-}
-
-function normalizarHex(hex: string): { luminancia: number } {
-  const h = hex.replace('#', '')
-  const r = parseInt(h.slice(0, 2), 16)
-  const g = parseInt(h.slice(2, 4), 16)
-  const b = parseInt(h.slice(4, 6), 16)
-  // Luminancia relativa aproximada (0 = negro, 1 = blanco)
-  return { luminancia: (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255 }
+/** Que la barra del navegador móvil combine con el tema de la semana. */
+export function aplicarThemeColor(color: string): void {
+  let m = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]')
+  if (!m) {
+    m = document.createElement('meta')
+    m.name = 'theme-color'
+    document.head.appendChild(m)
+  }
+  m.content = color
 }

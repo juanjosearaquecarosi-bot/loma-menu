@@ -5,125 +5,142 @@
   "lema": "Sabor que reconforta, tradición que nos une.",
   "ciudad_frase": "Hecho en el corazón de San Cristóbal",
   "moneda": "€",
-  "moneda_pesos": "$",
   "zona_horaria": "America/Caracas",
-  "logos": {
-    "claro": "/logo-claro.jpg",
-    "oscuro": "/logo-negro.jpg"
+  "enlaces": {},
+  "suscripcion": {
+    "estado": "activa",
+    "vence": null
   },
-  "tema": {
-    "claro": {
-      "fondo": "#F6F0E4",
-      "tinta": "#211512",
-      "oscuro": "#211512",
-      "acento": "#E8672A",
-      "acento_texto": "#B44A14",
-      "dorado": "#E8A92B",
-      "verde": "#2F6B3A"
-    },
-    "oscuro": {
-      "fondo": "#050505",
-      "tinta": "#F1E9DF",
-      "oscuro": "#D8490E",
-      "acento": "#FF7B33",
-      "acento_texto": "#FF9558",
-      "dorado": "#F4B942",
-      "verde": "#7FBF8E"
-    }
-  },
-  "enlaces": {
-    "whatsapp": "",
-    "whatsapp_mensaje": "¡Hola! Escribo desde el menú digital de Loma Linda para hacer un pedido.",
-    "instagram": "",
-    "email": "",
-    "direccion": "",
-    "wifi": null,
-    "pagos": []
-  },
-  "suscripcion": { "estado": "activa", "vence": null },
   "almuerzo": {
-    "titulo": "Almuerzos",
-    "incluye": ["Sopa", "Contorno", "Ensalada", "Jugo"],
-    "platos_fijos": [
-      { "nombre": "Pechuga", "detalle": "a la plancha / ajillo" },
-      { "nombre": "Bistec", "detalle": "a la plancha / ajillo" },
-      { "nombre": "Chuleta ahumada", "detalle": "BBQ / Piña" }
+    "titulo": "Menú de almuerzo",
+    "incluye": [
+      "Sopa",
+      "Contorno",
+      "Ensalada",
+      "Jugo"
     ],
-    "set_activo": "A",
-    "rotaciones": {
-      "A": {
-        "lunes": { "nombre": "Gordon Blue", "detalle": "en salsa de champiñones" },
-        "martes": { "nombre": "Pabellón criollo" },
-        "miercoles": { "nombre": "Pollo guisado" },
-        "jueves": { "nombre": "Bistec al caballo", "detalle": "a la plancha / ajillo" },
-        "viernes": { "nombre": "Cotoleta de pollo", "detalle": "a la plancha / ajillo" },
-        "sabado": null
+    "platos_fijos": [
+      {
+        "nombre": "Pechuga",
+        "detalle": "a la plancha / ajillo"
       },
-      "B": {
-        "lunes": { "nombre": "Churrasco de pollo", "detalle": "a la plancha" },
-        "martes": null,
-        "miercoles": { "nombre": "Croquetas", "detalle": "con queso" },
-        "jueves": { "nombre": "Alas de pollo", "detalle": "BBQ / Piña" },
-        "viernes": { "nombre": "Pechuga napolitana", "detalle": "a la plancha" },
-        "sabado": null
+      {
+        "nombre": "Bistec",
+        "detalle": "a la plancha / ajillo"
       },
-      "C": {
-        "lunes": { "nombre": "Parrilla paisa" },
-        "martes": { "nombre": "Costilla asada" },
-        "miercoles": { "nombre": "Pechuga en vegetales" },
-        "jueves": { "nombre": "Pollo al horno" },
-        "viernes": { "nombre": "Pechuga en salsa de champiñones" },
-        "sabado": null
+      {
+        "nombre": "Chuleta ahumada",
+        "detalle": "BBQ / Piña"
+      }
+    ],
+    "plato_del_dia": {
+      "lunes": {
+        "nombre": "Alas de pollo en BBQ"
+      },
+      "martes": {
+        "nombre": "Carne guisada"
+      },
+      "miercoles": {
+        "nombre": "Costilla asada"
+      },
+      "jueves": {
+        "nombre": "Pollo guisado"
+      },
+      "viernes": {
+        "nombre": "Croqueta de carne"
       }
     },
-    "plato_del_dia": {
-      "lunes": { "nombre": "Alas de pollo en BBQ" },
-      "martes": { "nombre": "Carne guisada" },
-      "miercoles": { "nombre": "Costilla asada" },
-      "jueves": { "nombre": "Pollo guisado" },
-      "viernes": { "nombre": "Croqueta de carne" }
-    },
-    "dias_sin_servicio": ["domingo"]
+    "dias_sin_servicio": [
+      "domingo"
+    ],
+    "cuarto_plato": {
+      "actual": null,
+      "catalogo": [
+        {
+          "nombre": "Pasticho"
+        },
+        {
+          "nombre": "Pechuga napolitana"
+        }
+      ]
+    }
   },
   "categorias": [
     {
       "id": "desayunos",
       "nombre": "Desayunos",
-      "grupo": "comida",
-      "nota": "Servidos todo el día. Pregunta por las opciones del día.",
+      "grupo": "desayuno",
       "items": [
-        { "id": "ds-cafe", "nombre": "Café con leche", "precio": null },
-        { "id": "ds-arepa", "nombre": "Arepa", "precio": null },
-        { "id": "ds-huevos", "nombre": "Huevos al gusto", "precio": null },
-        { "id": "ds-empanada-desayuno", "nombre": "Empanada", "precio": null }
-      ]
-    },
-    {
-      "id": "empanadas",
-      "nombre": "Empanadas",
-      "grupo": "comida",
-      "moneda": "$",
-      "nota": "Todas a $4.000 cada una.",
-      "items": [
-        { "id": "emp-carne-mechada", "nombre": "Carne mechada", "precio": 4000 },
-        { "id": "emp-pollo", "nombre": "Pollo", "precio": 4000 },
-        { "id": "emp-mixta", "nombre": "Mixta", "precio": 4000 }
-      ]
-    },
-    {
-      "id": "pasteles",
-      "nombre": "Pasteles",
-      "grupo": "comida",
-      "moneda": "$",
-      "nota": "Todas a $3.000 cada una, excepto la especial a $4.000.",
-      "items": [
-        { "id": "pt-carne-mechada", "nombre": "Carne mechada", "precio": 3000 },
-        { "id": "pt-pollo", "nombre": "Pollo", "precio": 3000 },
-        { "id": "pt-arroz-carne", "nombre": "Arroz con carne", "precio": 3000 },
-        { "id": "pt-queso", "nombre": "Queso", "precio": 3000 },
-        { "id": "pt-queso-bocadillo", "nombre": "Queso con bocadillo", "precio": 3000 },
-        { "id": "pt-mixto", "nombre": "Mixto", "precio": 3000 },
-        { "id": "pt-pollo-maiz-tocineta", "nombre": "Pollo, maíz y tocineta", "precio": 4000 }
+        {
+          "id": "des-emp-carne",
+          "nombre": "Carne mechada",
+          "subgrupo": "Empanadas",
+          "precio": 4000,
+          "moneda": "COP"
+        },
+        {
+          "id": "des-emp-pollo",
+          "nombre": "Pollo",
+          "subgrupo": "Empanadas",
+          "precio": 4000,
+          "moneda": "COP"
+        },
+        {
+          "id": "des-emp-mixta",
+          "nombre": "Mixta",
+          "subgrupo": "Empanadas",
+          "precio": 4000,
+          "moneda": "COP"
+        },
+        {
+          "id": "des-pas-carne",
+          "nombre": "Carne mechada",
+          "subgrupo": "Pasteles",
+          "precio": 3000,
+          "moneda": "COP"
+        },
+        {
+          "id": "des-pas-pollo",
+          "nombre": "Pollo",
+          "subgrupo": "Pasteles",
+          "precio": 3000,
+          "moneda": "COP"
+        },
+        {
+          "id": "des-pas-arroz",
+          "nombre": "Arroz con carne",
+          "subgrupo": "Pasteles",
+          "precio": 3000,
+          "moneda": "COP"
+        },
+        {
+          "id": "des-pas-queso",
+          "nombre": "Queso",
+          "subgrupo": "Pasteles",
+          "precio": 3000,
+          "moneda": "COP"
+        },
+        {
+          "id": "des-pas-queso-boc",
+          "nombre": "Queso con bocadillo",
+          "subgrupo": "Pasteles",
+          "precio": 3000,
+          "moneda": "COP"
+        },
+        {
+          "id": "des-pas-mixto",
+          "nombre": "Mixto",
+          "subgrupo": "Pasteles",
+          "precio": 3000,
+          "moneda": "COP"
+        },
+        {
+          "id": "des-pas-tocineta",
+          "nombre": "Tocineta, pollo y maíz",
+          "subgrupo": "Pasteles",
+          "precio": 4000,
+          "moneda": "COP"
+        }
       ]
     },
     {
@@ -132,25 +149,129 @@
       "grupo": "cafe",
       "nota": "Pregunta por nuestros métodos y cafés seleccionados (Brew Coffee).",
       "columnas": [
-        { "id": "pequeno", "label": "Pequeño" },
-        { "id": "mediano", "label": "Mediano" },
-        { "id": "grande", "label": "Grande" },
-        { "id": "extragrande", "label": "Extra" }
+        {
+          "id": "pequeno",
+          "label": "Pequeño"
+        },
+        {
+          "id": "mediano",
+          "label": "Mediano"
+        },
+        {
+          "id": "grande",
+          "label": "Grande"
+        },
+        {
+          "id": "extragrande",
+          "label": "Extra"
+        }
       ],
       "items": [
-        { "id": "affogato", "nombre": "Affogato", "precios": { "grande": 6 } },
-        { "id": "americano", "nombre": "Americano", "precios": { "pequeno": 2, "mediano": 3, "grande": 4, "extragrande": 4.5 } },
-        { "id": "capuccino", "nombre": "Capuccino", "precios": { "pequeno": 2, "mediano": 3, "grande": 4, "extragrande": 4.5 } },
-        { "id": "carajillo", "nombre": "Carajillo", "precios": { "pequeno": 4 } },
-        { "id": "espresso", "nombre": "Espresso", "precios": { "pequeno": 3 } },
-        { "id": "frappuccino", "nombre": "Frappuccino", "precios": { "grande": 6 } },
-        { "id": "ice-latte", "nombre": "Ice Latte", "precios": { "grande": 4 } },
-        { "id": "ice-mocca", "nombre": "Ice Mocca", "precios": { "grande": 6 } },
-        { "id": "latte", "nombre": "Latte", "precios": { "pequeno": 2, "mediano": 3, "grande": 4, "extragrande": 4.5 } },
-        { "id": "latte-macchiato", "nombre": "Latte Macchiato", "precios": { "pequeno": 3 } },
-        { "id": "loma-del-viento", "nombre": "Loma del Viento", "precios": { "mediano": 3, "grande": 4, "extragrande": 4.5 } },
-        { "id": "loma-linda-cafe", "nombre": "Loma Linda", "precios": { "pequeno": 2, "mediano": 3, "grande": 4, "extragrande": 4.5 } },
-        { "id": "macaccino", "nombre": "Macaccino", "precios": { "grande": 6 } }
+        {
+          "id": "affogato",
+          "nombre": "Affogato",
+          "precios": {
+            "grande": 6
+          }
+        },
+        {
+          "id": "americano",
+          "nombre": "Americano",
+          "precios": {
+            "pequeno": 2,
+            "mediano": 3,
+            "grande": 4,
+            "extragrande": 4.5
+          }
+        },
+        {
+          "id": "capuccino",
+          "nombre": "Capuccino",
+          "precios": {
+            "pequeno": 2,
+            "mediano": 3,
+            "grande": 4,
+            "extragrande": 4.5
+          }
+        },
+        {
+          "id": "carajillo",
+          "nombre": "Carajillo",
+          "precios": {
+            "pequeno": 4
+          }
+        },
+        {
+          "id": "espresso",
+          "nombre": "Espresso",
+          "precios": {
+            "pequeno": 3
+          }
+        },
+        {
+          "id": "frappuccino",
+          "nombre": "Frappuccino",
+          "precios": {
+            "grande": 6
+          }
+        },
+        {
+          "id": "ice-latte",
+          "nombre": "Ice Latte",
+          "precios": {
+            "grande": 4
+          }
+        },
+        {
+          "id": "ice-mocca",
+          "nombre": "Ice Mocca",
+          "precios": {
+            "grande": 6
+          }
+        },
+        {
+          "id": "latte",
+          "nombre": "Latte",
+          "precios": {
+            "pequeno": 2,
+            "mediano": 3,
+            "grande": 4,
+            "extragrande": 4.5
+          }
+        },
+        {
+          "id": "latte-macchiato",
+          "nombre": "Latte Macchiato",
+          "precios": {
+            "pequeno": 3
+          }
+        },
+        {
+          "id": "loma-del-viento",
+          "nombre": "Loma del Viento",
+          "precios": {
+            "mediano": 3,
+            "grande": 4,
+            "extragrande": 4.5
+          }
+        },
+        {
+          "id": "loma-linda-cafe",
+          "nombre": "Loma Linda",
+          "precios": {
+            "pequeno": 2,
+            "mediano": 3,
+            "grande": 4,
+            "extragrande": 4.5
+          }
+        },
+        {
+          "id": "macaccino",
+          "nombre": "Macaccino",
+          "precios": {
+            "grande": 6
+          }
+        }
       ]
     },
     {
@@ -158,12 +279,37 @@
       "nombre": "Bebidas",
       "grupo": "cafe",
       "items": [
-        { "id": "batidos-frappe", "nombre": "Batidos Frappe", "precio": 3 },
-        { "id": "infusiones", "nombre": "Infusiones", "precio": 2 },
-        { "id": "merengadas", "nombre": "Merengadas", "precio": 4.5 },
-        { "id": "malteadas", "nombre": "Malteadas", "precio": 6 },
-        { "id": "toddy", "nombre": "Toddy", "descripcion": "Frío / Caliente", "precio": 4.5 },
-        { "id": "chocolate-especias", "nombre": "Chocolate con Especias", "precio": 3 }
+        {
+          "id": "batidos-frappe",
+          "nombre": "Batidos Frappe",
+          "precio": 3
+        },
+        {
+          "id": "infusiones",
+          "nombre": "Infusiones",
+          "precio": 2
+        },
+        {
+          "id": "merengadas",
+          "nombre": "Merengadas",
+          "precio": 4.5
+        },
+        {
+          "id": "malteadas",
+          "nombre": "Malteadas",
+          "precio": 6
+        },
+        {
+          "id": "toddy",
+          "nombre": "Toddy",
+          "descripcion": "Frío / Caliente",
+          "precio": 4.5
+        },
+        {
+          "id": "chocolate-especias",
+          "nombre": "Chocolate con Especias",
+          "precio": 3
+        }
       ]
     },
     {
@@ -171,11 +317,31 @@
       "nombre": "Pastelería",
       "grupo": "cafe",
       "items": [
-        { "id": "arepa-integral", "nombre": "Arepa Integral", "precio": 3 },
-        { "id": "cachitos", "nombre": "Cachitos", "precio": 3 },
-        { "id": "empanada-chilena", "nombre": "Empanada Chilena", "precio": 4.5 },
-        { "id": "hojaldre-jamon-queso", "nombre": "Hojaldre Jamón y Queso", "precio": 3 },
-        { "id": "hojaldre-pollo", "nombre": "Hojaldre Pollo", "precio": 4.5 }
+        {
+          "id": "arepa-integral",
+          "nombre": "Arepa Integral",
+          "precio": 3
+        },
+        {
+          "id": "cachitos",
+          "nombre": "Cachitos",
+          "precio": 3
+        },
+        {
+          "id": "empanada-chilena",
+          "nombre": "Empanada Chilena",
+          "precio": 4.5
+        },
+        {
+          "id": "hojaldre-jamon-queso",
+          "nombre": "Hojaldre Jamón y Queso",
+          "precio": 3
+        },
+        {
+          "id": "hojaldre-pollo",
+          "nombre": "Hojaldre Pollo",
+          "precio": 4.5
+        }
       ]
     },
     {
@@ -183,11 +349,31 @@
       "nombre": "Repostería",
       "grupo": "cafe",
       "items": [
-        { "id": "alfajor", "nombre": "Alfajor", "precio": 2 },
-        { "id": "brownie", "nombre": "Brownie", "precio": 3 },
-        { "id": "galleta-ny", "nombre": "Galleta New York", "precio": 3 },
-        { "id": "gofeados", "nombre": "Gofeados", "precio": null },
-        { "id": "torta-mantecada", "nombre": "Torta Mantecada", "precio": 2 }
+        {
+          "id": "alfajor",
+          "nombre": "Alfajor",
+          "precio": 2
+        },
+        {
+          "id": "brownie",
+          "nombre": "Brownie",
+          "precio": 3
+        },
+        {
+          "id": "galleta-ny",
+          "nombre": "Galleta New York",
+          "precio": 3
+        },
+        {
+          "id": "gofeados",
+          "nombre": "Gofeados",
+          "precio": null
+        },
+        {
+          "id": "torta-mantecada",
+          "nombre": "Torta Mantecada",
+          "precio": 2
+        }
       ]
     },
     {
@@ -196,9 +382,21 @@
       "grupo": "comida",
       "nota": "Todas nuestras hamburguesas llevan jamón, queso amarillo, pepinillos, cebolla, tomate, lechuga y papitas chips.",
       "items": [
-        { "id": "hb-carne", "nombre": "Carne", "precio": 7 },
-        { "id": "hb-especial", "nombre": "Especial Loma Linda", "precio": 8.5 },
-        { "id": "hb-pollo", "nombre": "Pollo Crispy", "precio": 7 }
+        {
+          "id": "hb-carne",
+          "nombre": "Carne",
+          "precio": 7
+        },
+        {
+          "id": "hb-especial",
+          "nombre": "Especial Loma Linda",
+          "precio": 8.5
+        },
+        {
+          "id": "hb-pollo",
+          "nombre": "Pollo Crispy",
+          "precio": 7
+        }
       ]
     },
     {
@@ -206,16 +404,70 @@
       "nombre": "Pizzas",
       "grupo": "comida",
       "columnas": [
-        { "id": "t1", "label": "Tamaño 1" },
-        { "id": "t2", "label": "Tamaño 2" }
+        {
+          "id": "t1",
+          "label": "Tamaño 1"
+        },
+        {
+          "id": "t2",
+          "label": "Tamaño 2"
+        }
       ],
       "items": [
-        { "id": "pz-campesina", "nombre": "Campesina", "descripcion": "Mozzarella, jamón, maíz y pimentón", "precios": { "t1": 7, "t2": 15.5 } },
-        { "id": "pz-capressa", "nombre": "Capressa", "descripcion": "Mozzarella, tomate confitado y pesto", "precios": { "t1": 6, "t2": 12.5 } },
-        { "id": "pz-hawaiana", "nombre": "Hawaiana", "descripcion": "Mozzarella, jamón y piña", "precios": { "t1": 6, "t2": 12.5 } },
-        { "id": "pz-loma-linda", "nombre": "Loma Linda", "descripcion": "Mozzarella, jamón, champiñones, anchoas y aceitunas negras", "precios": { "t1": 10, "t2": 18 } },
-        { "id": "pz-margarita", "nombre": "Margarita", "descripcion": "Mozzarella con salsa napolitana", "precios": { "t1": 6, "t2": 12.5 } },
-        { "id": "pz-pepperoni", "nombre": "Pepperoni", "descripcion": "Mozzarella, pepperoni y tocineta", "precios": { "t1": 7, "t2": 15.5 } }
+        {
+          "id": "pz-campesina",
+          "nombre": "Campesina",
+          "descripcion": "Mozzarella, jamón, maíz y pimentón",
+          "precios": {
+            "t1": 7,
+            "t2": 15.5
+          }
+        },
+        {
+          "id": "pz-capressa",
+          "nombre": "Capressa",
+          "descripcion": "Mozzarella, tomate confitado y pesto",
+          "precios": {
+            "t1": 6,
+            "t2": 12.5
+          }
+        },
+        {
+          "id": "pz-hawaiana",
+          "nombre": "Hawaiana",
+          "descripcion": "Mozzarella, jamón y piña",
+          "precios": {
+            "t1": 6,
+            "t2": 12.5
+          }
+        },
+        {
+          "id": "pz-loma-linda",
+          "nombre": "Loma Linda",
+          "descripcion": "Mozzarella, jamón, champiñones, anchoas y aceitunas negras",
+          "precios": {
+            "t1": 10,
+            "t2": 18
+          }
+        },
+        {
+          "id": "pz-margarita",
+          "nombre": "Margarita",
+          "descripcion": "Mozzarella con salsa napolitana",
+          "precios": {
+            "t1": 6,
+            "t2": 12.5
+          }
+        },
+        {
+          "id": "pz-pepperoni",
+          "nombre": "Pepperoni",
+          "descripcion": "Mozzarella, pepperoni y tocineta",
+          "precios": {
+            "t1": 7,
+            "t2": 15.5
+          }
+        }
       ]
     },
     {
@@ -223,11 +475,31 @@
       "nombre": "Submarinos",
       "grupo": "comida",
       "items": [
-        { "id": "sub-clasico", "nombre": "Clásico", "precio": 6 },
-        { "id": "sub-italiano", "nombre": "Italiano", "precio": 7 },
-        { "id": "sub-lomo", "nombre": "Lomo de cerdo", "precio": 7 },
-        { "id": "sub-roastbeef", "nombre": "Roastbeef", "precio": 7 },
-        { "id": "sub-pollo", "nombre": "Pollo", "precio": 7 }
+        {
+          "id": "sub-clasico",
+          "nombre": "Clásico",
+          "precio": 6
+        },
+        {
+          "id": "sub-italiano",
+          "nombre": "Italiano",
+          "precio": 7
+        },
+        {
+          "id": "sub-lomo",
+          "nombre": "Lomo de cerdo",
+          "precio": 7
+        },
+        {
+          "id": "sub-roastbeef",
+          "nombre": "Roastbeef",
+          "precio": 7
+        },
+        {
+          "id": "sub-pollo",
+          "nombre": "Pollo",
+          "precio": 7
+        }
       ]
     },
     {
@@ -235,10 +507,26 @@
       "nombre": "Sándwiches",
       "grupo": "comida",
       "items": [
-        { "id": "sw-croissant-choc", "nombre": "Croissant de Chocolate", "precio": 6 },
-        { "id": "sw-croissant-pollo", "nombre": "Croissant Pollo", "precio": 6 },
-        { "id": "sw-clasico", "nombre": "Sándwich Clásico", "precio": 4.5 },
-        { "id": "sw-full", "nombre": "Sándwich Full", "precio": 6 }
+        {
+          "id": "sw-croissant-choc",
+          "nombre": "Croissant de Chocolate",
+          "precio": 6
+        },
+        {
+          "id": "sw-croissant-pollo",
+          "nombre": "Croissant Pollo",
+          "precio": 6
+        },
+        {
+          "id": "sw-clasico",
+          "nombre": "Sándwich Clásico",
+          "precio": 4.5
+        },
+        {
+          "id": "sw-full",
+          "nombre": "Sándwich Full",
+          "precio": 6
+        }
       ]
     },
     {
@@ -246,8 +534,16 @@
       "nombre": "Club House",
       "grupo": "comida",
       "items": [
-        { "id": "ch-especial", "nombre": "Especial", "precio": 11.5 },
-        { "id": "ch-4-sabores", "nombre": "4 Sabores", "precio": 14 }
+        {
+          "id": "ch-especial",
+          "nombre": "Especial",
+          "precio": 11.5
+        },
+        {
+          "id": "ch-4-sabores",
+          "nombre": "4 Sabores",
+          "precio": 14
+        }
       ]
     },
     {
@@ -255,11 +551,55 @@
       "nombre": "Extras",
       "grupo": "comida",
       "items": [
-        { "id": "ex-chips", "nombre": "Chips de Papa", "precio": 2 },
-        { "id": "ex-papas", "nombre": "Papas Francesas", "precio": 3.5 },
-        { "id": "ex-nuggets", "nombre": "Nuggets", "precio": 3.5 },
-        { "id": "ex-tequenos", "nombre": "Tequeños", "precio": 3.5, "moneda": "$" }
+        {
+          "id": "ex-chips",
+          "nombre": "Chips de Papa",
+          "precio": 2
+        },
+        {
+          "id": "ex-papas",
+          "nombre": "Papas Francesas",
+          "precio": 3.5
+        },
+        {
+          "id": "ex-nuggets",
+          "nombre": "Nuggets",
+          "precio": 3.5
+        },
+        {
+          "id": "ex-tequenos",
+          "nombre": "Tequeños",
+          "precio": 3.5,
+          "moneda": "$"
+        }
       ]
     }
-  ]
+  ],
+  "temas": {
+    "naranja": {
+      "fondo": "#F0561C",
+      "tinta": "#120C08",
+      "titulo": "#FFFFFF",
+      "oscuro": "#0F0B09",
+      "claro": "#FFFFFF",
+      "acento": "#0F0B09",
+      "sobre_acento": "#FFFFFF",
+      "etiqueta": "#F0561C"
+    },
+    "negro": {
+      "fondo": "#0F0B09",
+      "tinta": "#F5EFE8",
+      "titulo": "#FFFFFF",
+      "oscuro": "#1C1613",
+      "claro": "#FFFFFF",
+      "acento": "#F0561C",
+      "sobre_acento": "#0F0B09",
+      "etiqueta": "#F0561C"
+    }
+  },
+  "tema_modo": "auto",
+  "tema_par": "naranja",
+  "pedidos": {
+    "activo": true
+  }
 }

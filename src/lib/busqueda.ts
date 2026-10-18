@@ -7,7 +7,8 @@ export interface ResultadoCarta {
   item: Item
 }
 export interface ResultadoAlmuerzo {
-  dia: string
+  /** Dónde aparece: "Todos los días", "Plato de la semana" o el día del plato del día. */
+  cuando: string
   plato: Plato
 }
 
@@ -17,7 +18,7 @@ export function buscarEnCarta(n: Negocio, consulta: string): ResultadoCarta[] {
   const out: ResultadoCarta[] = []
   for (const categoria of n.categorias) {
     for (const item of categoria.items) {
-      const texto = normalizar(`${item.nombre} ${item.descripcion ?? ''} ${categoria.nombre}`)
+      const texto = normalizar(`${item.nombre} ${item.descripcion ?? ''} ${item.subgrupo ?? ''} ${categoria.nombre}`)
       if (texto.includes(q)) out.push({ categoria, item })
     }
   }
@@ -27,17 +28,14 @@ export function buscarEnCarta(n: Negocio, consulta: string): ResultadoCarta[] {
 export function buscarEnAlmuerzo(n: Negocio, consulta: string): ResultadoAlmuerzo[] {
   const q = normalizar(consulta)
   if (!q) return []
+  const coincide = (p: Plato) => normalizar(`${p.nombre} ${p.detalle ?? ''}`).includes(q)
   const out: ResultadoAlmuerzo[] = []
+  const a = n.almuerzo
+  for (const p of a.platos_fijos) if (coincide(p)) out.push({ cuando: 'Todos los días', plato: p })
+  if (a.cuarto_plato.actual && coincide(a.cuarto_plato.actual)) out.push({ cuando: 'Plato de la semana', plato: a.cuarto_plato.actual })
   for (const d of DIAS) {
-    const a = almuerzoDe(n.almuerzo, d.id)
-    const platos = [...a.fijos, a.rotativo, a.platoDelDia].filter((p): p is Plato => !!p)
-    const vistos = new Set<string>()
-    for (const p of platos) {
-      if (normalizar(`${p.nombre} ${p.detalle ?? ''}`).includes(q) && !vistos.has(p.nombre)) {
-        vistos.add(p.nombre)
-        out.push({ dia: d.largo, plato: p })
-      }
-    }
+    const p = almuerzoDe(a, d.id).platoDelDia
+    if (p && coincide(p)) out.push({ cuando: `Plato del día · ${d.largo}`, plato: p })
   }
   return out
 }

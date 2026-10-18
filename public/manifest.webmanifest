@@ -3,7 +3,7 @@
   "short_name": "Menú",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#F6F0E4",
-  "theme_color": "#2B1D14",
+  "background_color": "#F0561C",
+  "theme_color": "#F0561C",
   "icons": [{ "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
 }

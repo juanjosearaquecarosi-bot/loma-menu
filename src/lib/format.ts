@@ -1,20 +1,17 @@
-/** 4.5 -> "4,5"; 6 -> "6" (se respeta el formato impreso en el menú original). */
+/**
+ * Números como en el menú impreso: coma decimal (4,5) y punto de miles (4.000).
+ * Se formatea a mano para no depender del locale del teléfono.
+ */
 export function numero(n: number): string {
-  return Number.isInteger(n) ? String(n) : String(n).replace('.', ',')
+  const r = Math.round(n * 100) / 100
+  const [ent, dec] = String(Math.abs(r)).split('.')
+  const miles = ent.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+  return `${r < 0 ? '-' : ''}${miles}${dec ? ',' + dec : ''}`
 }
 
-/** 4000 -> "4.000" (precios grandes de empanadas/pasteles en pesos). */
-export function numeroMiles(n: number): string {
-  const s = String(Math.abs(Math.round(n)))
-  return (n < 0 ? '-' : '') + s.replace(/\B(?=(\d{3})+(?!\d))/g, '.')
-}
-
-export function precioMiles(p: number, moneda: string): string {
-  return `${moneda}${numeroMiles(p)}`
-}
-
+/** "€4,5", "$3,5", pero "COP 4.000" (los códigos de moneda llevan espacio). */
 export function precio(n: number, moneda: string): string {
-  return `${moneda}${numero(n)}`
+  return moneda.length > 1 ? `${moneda} ${numero(n)}` : `${moneda}${numero(n)}`
 }
 
 /** Minúsculas y sin tildes, para que "pure" encuentre "puré" y "cafe" encuentre "café". */
