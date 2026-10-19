@@ -6,6 +6,7 @@ import './styles.css'
 import { MenuPage } from './pages/MenuPage'
 import { BienvenidaPage } from './pages/BienvenidaPage'
 import { QRRedirect } from './pages/QRRedirect'
+import { AdminPage } from './pages/AdminPage'
 import { NoEncontrado } from './pages/NoEncontrado'
 import { listarSlugs } from './lib/repo'
 
@@ -16,6 +17,8 @@ createRoot(document.getElementById('root')!).render(
         <Route path="/" element={<Navigate to={`/b/${listarSlugs()[0]}`} replace />} />
         <Route path="/b/:slug" element={<BienvenidaPage />} />
         <Route path="/m/:slug" element={<MenuPage />} />
+        <Route path="/admin" element={<AdminPage />} />
+        <Route path="/admin/:slug" element={<AdminPage />} />
         <Route path="/q/:codigo" element={<QRRedirect />} />
         <Route path="*" element={<NoEncontrado />} />
       </Routes>

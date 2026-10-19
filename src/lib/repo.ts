@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import type { EnlaceQR, Negocio } from '../types'
 import lomaLinda from '../data/loma-linda.json'
 import enlaces from '../data/enlaces.json'
+import { hayNube, leerBorrador, leerNube } from './store'
 
 /**
  * Capa de acceso a datos. Hoy lee JSON local; para pasar a Supabase solo se
@@ -35,8 +36,22 @@ if (import.meta.env.DEV) {
   ENLACES.push({ codigo: 'demo-pr', slug: 'demo-pruebas', activo: true })
 }
 
-export async function getNegocio(slug: string): Promise<Negocio | null> {
+/** Publicado en la nube (si hay) > JSON incluido. Con borrador=true, primero el borrador local del panel. */
+export async function getNegocio(slug: string, borrador = false): Promise<Negocio | null> {
+  if (borrador) {
+    const b = leerBorrador(slug)
+    if (b) return b
+  }
+  if (hayNube && NEGOCIOS[slug]) {
+    const r = await leerNube(slug)
+    if (r) return r
+  }
   return NEGOCIOS[slug] ?? null
+}
+
+/** Versión incluida en el código (base para "descartar cambios"). */
+export function getNegocioBase(slug: string): Negocio | null {
+  return NEGOCIOS[slug] ? structuredClone(NEGOCIOS[slug]) : null
 }
 
 export async function resolverEnlace(codigo: string): Promise<EnlaceQR | null> {
@@ -50,13 +65,14 @@ export function listarSlugs(): string[] {
 /** undefined = cargando, null = no existe. */
 export function useNegocio(slug: string): Negocio | null | undefined {
   const [n, setN] = useState<Negocio | null | undefined>(undefined)
+  const borrador = typeof location !== 'undefined' && new URLSearchParams(location.search).has('borrador')
   useEffect(() => {
     let vivo = true
     setN(undefined)
-    getNegocio(slug).then((r) => vivo && setN(r))
+    getNegocio(slug, borrador).then((r) => vivo && setN(r))
     return () => {
       vivo = false
     }
-  }, [slug])
+  }, [slug, borrador])
   return n
 }

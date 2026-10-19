@@ -161,6 +161,13 @@ a.hub-card:hover { background: color-mix(in srgb, var(--tinta) 8%, transparent);
 .pagos-lista strong { font-weight: 800; color: var(--titulo); font-size: 18px; }
 .pagos-lista span { font-size: 14px; font-weight: 500; color: var(--suave); word-break: break-word; }
 
+/* Datos de pago copiables */
+.dato { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 0; border-top: 1px solid var(--linea); }
+.dato > span { display: flex; flex-direction: column; min-width: 0; font-size: 17px; font-weight: 700; color: var(--titulo); overflow-wrap: anywhere; }
+.dato small { font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--suave); }
+.chip-mini { min-height: 40px; padding: 0 14px; flex: none; }
+.logo { background: #000; padding: 14px 18px; border-radius: 18px; max-width: 230px; max-height: none; }
+
 /* ---------- Pie ---------- */
 .pie { margin-top: 36px; margin-bottom: 0; padding: 40px 20px calc(env(safe-area-inset-bottom) + 36px); background: var(--oscuro); color: var(--claro); }
 .pie .emblema { color: var(--etiqueta); }
@@ -197,6 +204,29 @@ a.hub-card:hover { background: color-mix(in srgb, var(--tinta) 8%, transparent);
 .enviar { min-height: 58px; border: 0; border-radius: 999px; background: var(--acento); color: var(--sobre-acento); font-size: 17px; font-weight: 800; cursor: pointer; }
 .pie-hoja { margin: 0; font-size: 13px; font-weight: 500; color: var(--suave); text-align: center; }
 .vaciar { min-height: 44px; border: 0; background: transparent; color: var(--tinta); font-weight: 600; text-decoration: underline; cursor: pointer; }
+
+/* ---------- Panel admin (mismos tokens de marca) ---------- */
+.adm-cab { border-bottom: 3px solid var(--tinta); }
+.adm-cab h1 { font-size: clamp(36px, 11vw, 64px); }
+.adm-main { display: grid; gap: 12px; padding: 20px 20px 120px; }
+.adm-cuerpo { display: grid; gap: 12px; padding-top: 16px; }
+.adm-campo select, .adm-campo { min-width: 0; }
+.adm-campo select { padding: 12px 14px; border: 2px solid var(--tinta); border-radius: 16px; background: #fff; color: #120c08; font-size: 16px; }
+.adm-campo textarea { resize: vertical; }
+.adm-ayuda { font-size: 13px; font-weight: 500; color: var(--suave); margin: 0; }
+.adm-sub { margin: 14px 0 0; font-size: 12px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; }
+.adm-fila { display: flex; flex-wrap: wrap; gap: 8px; align-items: end; }
+.adm-fila > .adm-campo { flex: 1 1 140px; }
+.adm-precio { flex: 0 1 110px !important; }
+.adm-grupo, .adm-item { display: grid; gap: 10px; margin: 0; padding: 14px; border: 2px solid var(--tinta); border-radius: 18px; min-width: 0; }
+.adm-cat { padding: 12px 0; border-top: 2px solid var(--tinta); display: grid; gap: 12px; }
+.adm-cat > summary { cursor: pointer; font-weight: 800; font-size: 18px; color: var(--titulo); }
+.adm-check { display: flex; align-items: center; gap: 10px; min-height: 44px; font-weight: 600; }
+.adm-btn:disabled { opacity: .45; cursor: default; }
+.adm-peligro { border-style: dashed; }
+.adm-barra { position: fixed; z-index: 30; left: 50%; bottom: 0; transform: translateX(-50%); width: min(100%, 640px); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 12px 16px calc(env(safe-area-inset-bottom) + 12px); background: var(--fondo); border-top: 3px solid var(--tinta); }
+.adm-estado { flex: 1 1 100%; font-size: 13px; font-weight: 700; }
+.adm-login { display: grid; gap: 14px; align-content: start; min-height: 100dvh; }
 
 @media (min-width: 700px) {
   .app { border-inline: 2px solid var(--tinta); }

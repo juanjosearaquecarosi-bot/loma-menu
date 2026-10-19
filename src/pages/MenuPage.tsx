@@ -92,7 +92,7 @@ export function MenuPage() {
         </a>
 
         <header className="hero">
-          <div className="hero-marca">{n.logo ? <img className="logo" src={n.logo} alt="" width="120" height="80" /> : <Emblema />}</div>
+          <div className="hero-marca">{n.logo ? <img className="logo" src={n.logo} alt={n.nombre} width="230" height="164" /> : <Emblema />}</div>
           <p className="sobre">Café · Repostería · Comida</p>
           <h1>{n.nombre}</h1>
           <p className="subtitulo">{n.subtitulo}</p>

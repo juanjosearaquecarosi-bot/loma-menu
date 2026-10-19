@@ -6,7 +6,44 @@
   "ciudad_frase": "Hecho en el corazón de San Cristóbal",
   "moneda": "€",
   "zona_horaria": "America/Caracas",
-  "enlaces": {},
+  "enlaces": {
+    "whatsapp": "584124215818",
+    "instagram": "lomalindasc",
+    "google_review": "https://search.google.com/local/writereview?placeid=ChIJebZD3fJtZo4RHmaazlklkPk",
+    "pagos": [
+      {
+        "metodo": "Binance Pay",
+        "datos": [
+          {
+            "etiqueta": "ID",
+            "valor": "1205373702"
+          },
+          {
+            "etiqueta": "Correo",
+            "valor": "gustavoaomanac@gmail.com"
+          }
+        ]
+      },
+      {
+        "metodo": "Pago Móvil Banesco",
+        "detalle": "Enviar capture al 0412 4215 818",
+        "datos": [
+          {
+            "etiqueta": "Celular",
+            "valor": "0412-4215818"
+          },
+          {
+            "etiqueta": "Identificación",
+            "valor": "V-13649620"
+          },
+          {
+            "etiqueta": "Código banco",
+            "valor": "0134"
+          }
+        ]
+      }
+    ]
+  },
   "suscripcion": {
     "estado": "activa",
     "vence": null
@@ -601,5 +638,6 @@
   "tema_par": "naranja",
   "pedidos": {
     "activo": true
-  }
+  },
+  "logo": "/logo-loma-linda.png"
 }

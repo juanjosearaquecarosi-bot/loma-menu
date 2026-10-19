@@ -8,6 +8,27 @@ import { QrSvg } from '../components/QrSvg'
 import { NoEncontrado } from './NoEncontrado'
 
 /** Pantalla a la que llega quien escanea el QR o toca el NFC. Solo muestra lo que el negocio configuró. */
+function Copiar({ valor }: { valor: string }) {
+  const [ok, setOk] = useState(false)
+  return (
+    <button
+      type="button"
+      className="chip chip-sol chip-mini"
+      onClick={async () => {
+        try {
+          await navigator.clipboard.writeText(valor)
+          setOk(true)
+          setTimeout(() => setOk(false), 1800)
+        } catch {
+          /* sin permiso: el dato igual se ve en pantalla */
+        }
+      }}
+    >
+      {ok ? 'Copiado' : 'Copiar'}
+    </button>
+  )
+}
+
 export function BienvenidaPage() {
   const { slug = '' } = useParams()
   const [sp] = useSearchParams()
@@ -33,7 +54,7 @@ export function BienvenidaPage() {
     <div className={`raiz tema-${id}`} style={estiloTema(tema, id)}>
     <div className="app hub">
       <header className="hero">
-        <div className="hero-marca">{n.logo ? <img className="logo" src={n.logo} alt="" width="120" height="80" /> : <Emblema />}</div>
+        <div className="hero-marca">{n.logo ? <img className="logo" src={n.logo} alt={n.nombre} width="230" height="164" /> : <Emblema />}</div>
         <h1>{n.nombre}</h1>
         <p className="subtitulo">{n.subtitulo}</p>
         <Link className="cta" to={`/m/${n.slug}${qs}`}>
@@ -116,7 +137,16 @@ export function BienvenidaPage() {
               {e.pagos.map((p) => (
                 <li key={p.metodo}>
                   <strong>{p.metodo}</strong>
-                  <span>{p.detalle}</span>
+                  {p.datos?.map((x) => (
+                    <div className="dato" key={x.etiqueta}>
+                      <span>
+                        <small>{x.etiqueta}</small>
+                        {x.valor}
+                      </span>
+                      <Copiar valor={x.valor} />
+                    </div>
+                  ))}
+                  {p.detalle && <span>{p.detalle}</span>}
                 </li>
               ))}
             </ul>

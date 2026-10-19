@@ -82,12 +82,8 @@ export interface Enlaces {
   /** @usuario o URL de instagram.com. */
   instagram?: string
   google_review?: string
-  /** Correo de contacto. Se muestra solo si existe (nada inventado). */
-  email?: string
-  /** Dirección física del local. Se muestra solo si existe (nada inventado). */
-  direccion?: string
   wifi?: { red: string; clave: string; seguridad?: 'WPA' | 'WEP' | 'nopass' }
-  pagos?: { metodo: string; detalle: string }[]
+  pagos?: { metodo: string; detalle?: string; datos?: { etiqueta: string; valor: string }[] }[]
 }
 
 export interface Negocio {
@@ -97,8 +93,6 @@ export interface Negocio {
   lema: string
   ciudad_frase: string
   moneda: string
-  /** Moneda de empanadas y pasteles (pesos), definida por el cliente. Opcional. */
-  moneda_pesos?: string
   zona_horaria: string
   /** URL o ruta del logo del cliente. Si falta se usa un emblema genérico de relleno. */
   logo?: string
