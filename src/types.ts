@@ -84,6 +84,10 @@ export interface Enlaces {
   google_review?: string
   wifi?: { red: string; clave: string; seguridad?: 'WPA' | 'WEP' | 'nopass' }
   pagos?: { metodo: string; detalle?: string; datos?: { etiqueta: string; valor: string }[] }[]
+  /** Dirección física del negocio. Solo se muestra si existe. */
+  direccion?: string
+  /** Correo de contacto. Solo se muestra si existe. */
+  email?: string
 }
 
 export interface Negocio {
