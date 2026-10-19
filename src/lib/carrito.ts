@@ -62,7 +62,7 @@ export function validarPedido(lineas: Linea[], d: DatosPedido): string | null {
 /** Quita saltos de línea y caracteres de control de lo que escribió el cliente. */
 const limpio = (s: string, max: number) => s.replace(/[\u0000-\u001f\u007f]+/g, ' ').trim().slice(0, max)
 
-export function armarMensaje(nombreNegocio: string, monedaPrincipal: string, lineas: Linea[], d: DatosPedido): string {
+export function armarMensaje(nombreNegocio: string, monedaPrincipal: string, lineas: Linea[], d: DatosPedido, conPago = false): string {
   const filas = lineas.map((l) => {
     const nom = l.variante ? `${l.nombre} (${l.variante})` : l.nombre
     return `• ${l.cantidad} × ${nom} — ${precio(r2(l.precio * l.cantidad), l.moneda)}`
@@ -72,5 +72,6 @@ export function armarMensaje(nombreNegocio: string, monedaPrincipal: string, lin
   out.push(`Nombre: ${limpio(d.nombre, 60)}`)
   if (d.tipo === 'delivery') out.push(`Dirección: ${limpio(d.direccion, 160)}`)
   if (d.notas.trim()) out.push(`Notas: ${limpio(d.notas, 300)}`)
+  if (conPago) out.push('', 'Pago: adjunto la captura del comprobante en este chat.')
   return out.join('\n')
 }

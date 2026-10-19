@@ -3,32 +3,12 @@ import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { useNegocio } from '../lib/repo'
 import { aplicarThemeColor, elegirTema, estiloTema } from '../lib/tema'
 import { instagramUrl, mensajeWhatsAppPorDefecto, urlSegura, waUrl, wifiPayload } from '../lib/contacto'
-import { Emblema } from '../components/Marca'
+import { Emblema, PieLegal } from '../components/Marca'
+import { PagosLista } from '../components/Pagos'
 import { QrSvg } from '../components/QrSvg'
 import { NoEncontrado } from './NoEncontrado'
 
 /** Pantalla a la que llega quien escanea el QR o toca el NFC. Solo muestra lo que el negocio configuró. */
-function Copiar({ valor }: { valor: string }) {
-  const [ok, setOk] = useState(false)
-  return (
-    <button
-      type="button"
-      className="chip chip-sol chip-mini"
-      onClick={async () => {
-        try {
-          await navigator.clipboard.writeText(valor)
-          setOk(true)
-          setTimeout(() => setOk(false), 1800)
-        } catch {
-          /* sin permiso: el dato igual se ve en pantalla */
-        }
-      }}
-    >
-      {ok ? 'Copiado' : 'Copiar'}
-    </button>
-  )
-}
-
 export function BienvenidaPage() {
   const { slug = '' } = useParams()
   const [sp] = useSearchParams()
@@ -133,23 +113,7 @@ export function BienvenidaPage() {
                 <span className="hub-d">{e.pagos.length} disponibles</span>
               </span>
             </summary>
-            <ul className="pagos-lista">
-              {e.pagos.map((p) => (
-                <li key={p.metodo}>
-                  <strong>{p.metodo}</strong>
-                  {p.datos?.map((x) => (
-                    <div className="dato" key={x.etiqueta}>
-                      <span>
-                        <small>{x.etiqueta}</small>
-                        {x.valor}
-                      </span>
-                      <Copiar valor={x.valor} />
-                    </div>
-                  ))}
-                  {p.detalle && <span>{p.detalle}</span>}
-                </li>
-              ))}
-            </ul>
+            <PagosLista pagos={e.pagos} />
           </details>
         )}
       </main>
@@ -158,7 +122,7 @@ export function BienvenidaPage() {
         <Emblema size={56} className="en-oscuro" />
         <p className="lema">{n.lema}</p>
         <p className="frase">{n.ciudad_frase}</p>
-        <p className="firma">Menú digital · NFC Táchira</p>
+        <PieLegal n={n} />
       </footer>
     </div>
     </div>

@@ -213,6 +213,11 @@ describe('carrito', () => {
     expect(m).toContain('Dirección: Calle 1')
     expect(m).toContain('Notas: Sin azúcar')
   })
+  it('con pagos configurados el mensaje avisa que se adjunta el comprobante', () => {
+    const l = agregar([], latte)
+    expect(armarMensaje('X', '€', l, datos, true)).toContain('Pago: adjunto la captura del comprobante')
+    expect(armarMensaje('X', '€', l, datos)).not.toContain('Pago:')
+  })
   it('el mensaje no puede inyectar líneas falsas con saltos de línea', () => {
     const l = agregar([], latte)
     const m = armarMensaje('X', '€', l, { ...datos, nombre: 'Ana\nTotal: €0', direccion: 'a\r\nb' })

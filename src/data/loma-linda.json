@@ -639,5 +639,21 @@
   "pedidos": {
     "activo": true
   },
-  "logo": "/logo-loma-linda.png"
+  "local": {
+    "direccion": "5ta Avenida (Avenida Francisco Javier García de Hevia), entre las Calles 5 y 6, centro de San Cristóbal, Táchira.",
+    "horario": [
+      {
+        "dias": "Lunes",
+        "horas": "7:00 a. m. – 6:00 p. m."
+      },
+      {
+        "dias": "Martes a sábado",
+        "horas": "8:00 a. m. – 6:00 p. m."
+      },
+      {
+        "dias": "Domingo",
+        "horas": "Cerrado"
+      }
+    ]
+  }
 }

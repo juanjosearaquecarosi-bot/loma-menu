@@ -1,3 +1,5 @@
+import type { Negocio } from '../types'
+
 /** Marca de relleno (sol naciente sobre una loma) para negocios sin logo. Monocromática: usa los colores del tema. */
 export function Emblema({ size = 64, className = '' }: { size?: number; className?: string }) {
   const rayos = Array.from({ length: 7 }, (_, i) => {
@@ -16,5 +18,39 @@ export function Emblema({ size = 64, className = '' }: { size?: number; classNam
       <path d="M24 54 L50 30 L76 54 Z" fill="currentColor" />
       <line x1="10" y1="56" x2="90" y2="56" stroke="var(--titulo)" strokeWidth="4" strokeLinecap="round" />
     </svg>
+  )
+}
+
+export function PieLegal({ n }: { n: Negocio }) {
+  const l = n.local
+  return (
+    <>
+      {l && (l.direccion || l.horario?.length) && (
+        <div className="local">
+          {l.direccion && (
+            <p>
+              <small>Dirección</small>
+              {l.direccion}
+            </p>
+          )}
+          {l.horario && l.horario.length > 0 && (
+            <dl>
+              <dt className="sr">Horario</dt>
+              {l.horario.map((h) => (
+                <div key={h.dias}>
+                  <dt>{h.dias}</dt>
+                  <dd>{h.horas}</dd>
+                </div>
+              ))}
+            </dl>
+          )}
+        </div>
+      )}
+      <p className="firma">
+        {l?.razon_social && <>{l.razon_social} · </>}
+        {l?.rif && <>RIF {l.rif} · </>}
+        Menú digital creado por NFC Táchira
+      </p>
+    </>
   )
 }

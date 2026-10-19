@@ -8,9 +8,9 @@ export function Enlaces({ n }: { n: Negocio }) {
   const wa = e.whatsapp ? waUrl(e.whatsapp, e.whatsapp_mensaje ?? mensajeWhatsAppPorDefecto(n.nombre)) : null
   const ig = instagramUrl(e.instagram)
   const gr = urlSegura(e.google_review)
-  const hayHub = !!e.wifi || !!e.pagos?.length
+  const hayWifi = !!e.wifi
 
-  if (!wa && !ig && !gr && !hayHub) return null
+  if (!wa && !ig && !gr && !hayWifi) return null
   return (
     <div className="enlaces" aria-label="Accesos rápidos">
       {wa && (
@@ -28,9 +28,9 @@ export function Enlaces({ n }: { n: Negocio }) {
           Deja tu reseña
         </a>
       )}
-      {hayHub && (
+      {hayWifi && (
         <Link className="chip" to={`/b/${n.slug}`}>
-          Wi-Fi y pagos
+          Wi-Fi
         </Link>
       )}
     </div>

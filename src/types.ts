@@ -84,10 +84,6 @@ export interface Enlaces {
   google_review?: string
   wifi?: { red: string; clave: string; seguridad?: 'WPA' | 'WEP' | 'nopass' }
   pagos?: { metodo: string; detalle?: string; datos?: { etiqueta: string; valor: string }[] }[]
-  /** Dirección física del negocio. Solo se muestra si existe. */
-  direccion?: string
-  /** Correo de contacto. Solo se muestra si existe. */
-  email?: string
 }
 
 export interface Negocio {
@@ -98,6 +94,8 @@ export interface Negocio {
   ciudad_frase: string
   moneda: string
   zona_horaria: string
+  /** Datos legales y de ubicación (pie de página). Solo se muestra lo que exista. */
+  local?: { rif?: string; razon_social?: string; direccion?: string; horario?: { dias: string; horas: string }[] }
   /** URL o ruta del logo del cliente. Si falta se usa un emblema genérico de relleno. */
   logo?: string
   temas: Record<TemaId, Tema>

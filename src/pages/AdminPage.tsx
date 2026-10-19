@@ -141,6 +141,27 @@ function SeccionEnlaces({ d, upd }: { d: Negocio; upd: Upd }) {
   )
 }
 
+function SeccionLocal({ d, upd }: { d: Negocio; upd: Upd }) {
+  const l = d.local ?? {}
+  const set = (fn: (x: NonNullable<Negocio['local']>) => void) => upd((x) => { x.local = x.local ?? {}; fn(x.local) })
+  return (
+    <Bloque titulo="Datos legales, dirección y horario (pie de página)">
+      <Campo label="Razón social (opcional)" value={l.razon_social} onChange={(v) => set((x) => void (x.razon_social = vacioAUndef(v)))} />
+      <Campo label="RIF" value={l.rif} onChange={(v) => set((x) => void (x.rif = vacioAUndef(v)))} ayuda="Ej. J-12345678-9. Si lo dejas vacío no se muestra." />
+      <Campo label="Dirección" area value={l.direccion} onChange={(v) => set((x) => void (x.direccion = vacioAUndef(v)))} />
+      <h3 className="adm-sub">Horario</h3>
+      {(l.horario ?? []).map((h, i) => (
+        <div className="adm-fila" key={i}>
+          <Campo label="Días" value={h.dias} onChange={(v) => set((x) => void (x.horario![i].dias = v))} />
+          <Campo label="Horas" value={h.horas} onChange={(v) => set((x) => void (x.horario![i].horas = v))} />
+          <Boton peligro onClick={() => set((x) => void x.horario!.splice(i, 1))}>Quitar</Boton>
+        </div>
+      ))}
+      <Boton onClick={() => set((x) => void (x.horario = [...(x.horario ?? []), { dias: '', horas: '' }]))}>+ Línea de horario</Boton>
+    </Bloque>
+  )
+}
+
 /* ---------- Almuerzo ---------- */
 function PlatoCampos({ p, onChange, nombre }: { p: Plato | null | undefined; onChange: (p: Plato | null) => void; nombre: string }) {
   return (
@@ -251,6 +272,14 @@ function SeccionCarta({ d, upd }: { d: Negocio; upd: Upd }) {
           </summary>
           <Campo label="Título de la categoría" value={c.nombre} onChange={(v) => upd((x) => void (x.categorias[ci].nombre = v))} />
           <Campo label="Nota (opcional)" value={c.nota} area onChange={(v) => upd((x) => void (x.categorias[ci].nota = vacioAUndef(v)))} />
+          <label className="campo adm-campo">
+            Tipo de categoría
+            <select value={c.grupo} onChange={(e) => upd((x) => void (x.categorias[ci].grupo = e.target.value as Categoria['grupo']))}>
+              <option value="desayuno">Desayuno</option>
+              <option value="cafe">Café y bebidas</option>
+              <option value="comida">Comida</option>
+            </select>
+          </label>
           <Campo label="Horario (opcional)" value={c.horario} onChange={(v) => upd((x) => void (x.categorias[ci].horario = vacioAUndef(v)))} />
           {c.items.map((it, ii) => (
             <ItemEd key={it.id} it={it} cat={c} ci={ci} ii={ii} upd={upd} />
@@ -369,6 +398,7 @@ export function AdminPage() {
           <SeccionEnlaces d={d} upd={upd} />
           <SeccionCarta d={d} upd={upd} />
           <SeccionAlmuerzo d={d} upd={upd} />
+          <SeccionLocal d={d} upd={upd} />
           <SeccionInfo d={d} upd={upd} />
         </main>
 

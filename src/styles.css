@@ -177,6 +177,19 @@ a.hub-card:hover { background: color-mix(in srgb, var(--tinta) 8%, transparent);
 .firma { margin: 26px 0 0; font-size: 12px; font-weight: 500; color: color-mix(in srgb, var(--claro) 66%, transparent); }
 .raiz:has(.barra-pedido) .pie { padding-bottom: 110px; }
 
+.pasos { margin: 0; padding-left: 22px; display: grid; gap: 6px; font-weight: 600; }
+.hoja .pagos-lista { margin: 0; }
+.hoja .dato > span, .hoja .pagos-lista strong { color: var(--tinta); }
+
+/* Ubicación y horario en el pie */
+.local { margin-top: 26px; padding-top: 22px; border-top: 1px solid color-mix(in srgb, var(--claro) 30%, transparent); font-size: 15px; }
+.local p { margin: 0 0 16px; }
+.local small { display: block; margin-bottom: 4px; font-size: 11px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; color: var(--etiqueta); }
+.local dl { margin: 0; display: grid; gap: 6px; }
+.local dl div { display: flex; justify-content: space-between; gap: 16px; }
+.local dt, .local dd { margin: 0; }
+.local dt { font-weight: 700; }
+
 /* ---------- Carrito ---------- */
 .barra-pedido { position: fixed; z-index: 30; left: 50%; bottom: calc(env(safe-area-inset-bottom) + 14px); transform: translateX(-50%); display: flex; align-items: center; justify-content: space-between; gap: 12px; width: min(calc(100% - 28px), 612px); min-height: 58px; padding: 0 24px; border: 0; border-radius: 999px; background: var(--acento); color: var(--sobre-acento); font-size: 16px; font-weight: 700; cursor: pointer; box-shadow: 0 0 0 5px var(--fondo); }
 .barra-pedido .total { font-weight: 800; font-feature-settings: 'tnum'; }

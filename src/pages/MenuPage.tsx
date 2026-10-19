@@ -3,7 +3,7 @@ import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { useNegocio } from '../lib/repo'
 import { buscarEnAlmuerzo, buscarEnCarta } from '../lib/busqueda'
 import { aplicarThemeColor, elegirTema, estiloTema } from '../lib/tema'
-import { Emblema } from '../components/Marca'
+import { Emblema, PieLegal } from '../components/Marca'
 import { Enlaces } from '../components/Enlaces'
 import { Almuerzo } from '../components/Almuerzo'
 import { Carta } from '../components/Carta'
@@ -219,12 +219,7 @@ export function MenuPage() {
           <Emblema size={56} className="en-oscuro" />
           <p className="lema">{n.lema}</p>
           <p className="frase">{n.ciudad_frase}</p>
-          {(n.enlaces.wifi || n.enlaces.pagos?.length) && (
-            <Link className="chip" to={`/b/${n.slug}`}>
-              Wi-Fi y métodos de pago
-            </Link>
-          )}
-          <p className="firma">Menú digital · NFC Táchira</p>
+          <PieLegal n={n} />
         </footer>
       </div>
     </CarritoProvider>

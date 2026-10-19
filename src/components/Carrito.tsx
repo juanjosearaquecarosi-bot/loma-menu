@@ -3,6 +3,7 @@ import type { Negocio } from '../types'
 import { agregar as sumar, armarMensaje, cambiarCantidad, cantidadTotal, totalTexto, validarPedido, type DatosPedido, type Linea } from '../lib/carrito'
 import { precio } from '../lib/format'
 import { waUrl } from '../lib/contacto'
+import { PagosLista } from './Pagos'
 
 interface Ctx {
   /** El carrito solo existe si el negocio lo activó Y tiene un WhatsApp válido. */
@@ -34,6 +35,10 @@ export function CarritoProvider({ n, children }: { n: Negocio; children: React.R
   const dlg = useRef<HTMLDialogElement>(null)
   const [datos, setDatos] = useState<DatosPedido>({ tipo: 'delivery', nombre: '', direccion: '', notas: '' })
   const [error, setError] = useState<string | null>(null)
+  /** revisar → pago (si el negocio tiene métodos de pago) → enviado (WhatsApp abierto, sigue visible el pago). */
+  const [paso, setPaso] = useState<'revisar' | 'pago' | 'enviado'>('revisar')
+  const pagos = n.enlaces.pagos?.filter((p) => p.metodo.trim()) ?? []
+  const hayPagos = pagos.length > 0
 
   useEffect(() => {
     try {
@@ -44,7 +49,10 @@ export function CarritoProvider({ n, children }: { n: Negocio; children: React.R
   }, [clave, lineas])
 
   useEffect(() => {
-    if (!lineas.length) dlg.current?.close()
+    if (!lineas.length) {
+      dlg.current?.close()
+      setPaso('revisar')
+    }
   }, [lineas.length])
 
   useEffect(() => {
@@ -65,11 +73,25 @@ export function CarritoProvider({ n, children }: { n: Negocio; children: React.R
     setError(null)
   }
 
-  function enviar() {
+  function continuar() {
     const e = validarPedido(lineas, datos)
     if (e) return setError(e)
-    const url = waUrl(numero!, armarMensaje(n.nombre, n.moneda, lineas, datos))
+    if (hayPagos) setPaso('pago')
+    else abrirWhatsApp()
+  }
+  function abrirWhatsApp() {
+    const e = validarPedido(lineas, datos)
+    if (e) {
+      setPaso('revisar')
+      return setError(e)
+    }
+    const url = waUrl(numero!, armarMensaje(n.nombre, n.moneda, lineas, datos, hayPagos))
     if (url) window.open(url, '_blank', 'noopener')
+    if (hayPagos) setPaso('enviado')
+  }
+  function nuevoPedido() {
+    setLineas([])
+    setPaso('revisar')
   }
 
   return (
@@ -81,7 +103,10 @@ export function CarritoProvider({ n, children }: { n: Negocio; children: React.R
             {aviso}
           </p>
           {cant > 0 && (
-            <button type="button" className="barra-pedido" onClick={() => dlg.current?.showModal()}>
+            <button type="button" className="barra-pedido" onClick={() => {
+                if (paso === 'enviado') setPaso('revisar')
+                dlg.current?.showModal()
+              }}>
               <span>
                 Ver pedido <b>({cant})</b>
               </span>
@@ -98,12 +123,14 @@ export function CarritoProvider({ n, children }: { n: Negocio; children: React.R
           >
             <div className="hoja-in">
               <header className="hoja-cab">
-                <h2 id="t-pedido">Tu pedido</h2>
+                <h2 id="t-pedido">{paso === 'revisar' ? 'Tu pedido' : paso === 'pago' ? 'Paga tu pedido' : 'Falta tu pago'}</h2>
                 <button type="button" className="cerrar" onClick={() => dlg.current?.close()} aria-label="Cerrar">
                   ×
                 </button>
               </header>
 
+              {paso === 'revisar' && (
+                <>
               <ul className="lineas">
                 {lineas.map((l) => (
                   <li key={l.clave}>
@@ -159,13 +186,51 @@ export function CarritoProvider({ n, children }: { n: Negocio; children: React.R
                   {error}
                 </p>
               )}
-              <button type="button" className="enviar" onClick={enviar}>
-                Enviar pedido por WhatsApp
+              <button type="button" className="enviar" onClick={continuar}>
+                {hayPagos ? 'Continuar al pago' : 'Enviar pedido por WhatsApp'}
               </button>
-              <p className="pie-hoja">Se abrirá WhatsApp con tu pedido listo para enviar. El negocio te confirmará por ahí.</p>
+              <p className="pie-hoja">
+                {hayPagos ? 'Primero verás los métodos de pago; después se abrirá WhatsApp con tu pedido listo para enviar.' : 'Se abrirá WhatsApp con tu pedido listo para enviar. El negocio te confirmará por ahí.'}
+              </p>
               <button type="button" className="vaciar" onClick={() => setLineas([])}>
                 Vaciar pedido
               </button>
+                </>
+              )}
+              {paso !== 'revisar' && (
+                <>
+                  <p className="tot-fila">
+                    <span>Total a pagar</span>
+                    <b>{totalTexto(lineas, n.moneda)}</b>
+                  </p>
+                  <ol className="pasos">
+                    <li>{paso === 'pago' ? 'Paga con uno de estos métodos (toca “Copiar” en cada dato).' : 'Paga con uno de estos métodos.'}</li>
+                    <li>{paso === 'pago' ? 'Abre WhatsApp: tu pedido ya va escrito.' : 'En el chat de WhatsApp, adjunta la foto o captura del comprobante y envía el mensaje.'}</li>
+                    <li>Verificamos el pago y empezamos a preparar tu pedido.</li>
+                  </ol>
+                  <PagosLista pagos={pagos} />
+                  {paso === 'pago' ? (
+                    <>
+                      <button type="button" className="enviar" onClick={abrirWhatsApp}>
+                        Ya pagué · Abrir WhatsApp
+                      </button>
+                      <button type="button" className="vaciar" onClick={() => setPaso('revisar')}>
+                        ← Volver a mi pedido
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button type="button" className="enviar" onClick={abrirWhatsApp}>
+                        Volver a abrir WhatsApp
+                      </button>
+                      <p className="pie-hoja">El pedido no se prepara hasta verificar el comprobante.</p>
+                      <button type="button" className="vaciar" onClick={nuevoPedido}>
+                        Terminé · Nuevo pedido
+                      </button>
+                    </>
+                  )}
+                </>
+              )}
             </div>
           </dialog>
         </>
