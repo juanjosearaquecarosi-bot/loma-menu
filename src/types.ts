@@ -82,10 +82,6 @@ export interface Enlaces {
   /** @usuario o URL de instagram.com. */
   instagram?: string
   google_review?: string
-  /** Dirección que se muestra en la pantalla de bienvenida (opcional). */
-  direccion?: string
-  /** Correo de contacto en la pantalla de bienvenida; se enlaza con mailto:. */
-  email?: string
   wifi?: { red: string; clave: string; seguridad?: 'WPA' | 'WEP' | 'nopass' }
   pagos?: { metodo: string; detalle?: string; datos?: { etiqueta: string; valor: string }[] }[]
 }

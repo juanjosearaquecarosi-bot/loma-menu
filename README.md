@@ -39,4 +39,4 @@ Panel de administración (login, edición de precios, plato de la semana, métod
 ## Panel admin (/admin/loma-linda)
 - Edita precios, títulos, descripciones, almuerzo, enlaces y pagos.
 - **Sin Supabase** (por defecto): guarda un borrador en el navegador; "Descargar JSON" y pégalo en `src/data/loma-linda.json` para publicarlo. Vista previa con `?borrador=1`.
-- **Con Supabase**: corre `supabase/migrations/002_menu_docs.sql`, crea el usuario del cliente en Authentication, asígnalo con el `insert into menu_admins` del final del SQL y define `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY` en Vercel. Entonces el panel pide login y "Publicar" actualiza el menú público al instante. La seguridad la da RLS, no la interfaz.
+- **Con Supabase**: corre `supabase/migrations/002_menu_docs.sql`, crea el usuario del cliente en Authentication, asígnalo con el `insert into menu_admins` del final del SQL y define `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON` en Vercel. Entonces el panel pide login y "Publicar" actualiza el menú público al instante. La seguridad la da RLS, no la interfaz.

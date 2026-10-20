@@ -8,7 +8,8 @@ import type { Negocio } from '../types'
  * Solo se usa la clave "anon". Nunca la service_role.
  */
 const URL_BASE = (import.meta.env.VITE_SUPABASE_URL as string | undefined)?.replace(/\/$/, '')
-const ANON = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined
+// Vercel marca como "secreto" cualquier nombre que contenga KEY; la clave anon es pública por diseño, así que se acepta también sin esa palabra.
+const ANON = (import.meta.env.VITE_SUPABASE_ANON ?? import.meta.env.VITE_SUPABASE_ANON_KEY) as string | undefined
 export const hayNube = Boolean(URL_BASE && ANON)
 
 export function esNegocioValido(x: unknown): x is Negocio {
