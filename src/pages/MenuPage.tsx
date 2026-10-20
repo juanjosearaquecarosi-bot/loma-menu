@@ -107,7 +107,7 @@ export function MenuPage() {
         )}
 
         <div className="barra" ref={barraRef}>
-          <div className="buscador">
+          <div className="buscador" role="search">
             <label htmlFor="buscar" className="sr">
               Buscar en el menú
             </label>

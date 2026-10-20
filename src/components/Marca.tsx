@@ -34,8 +34,7 @@ export function PieLegal({ n }: { n: Negocio }) {
             </p>
           )}
           {l.horario && l.horario.length > 0 && (
-            <dl>
-              <dt className="sr">Horario</dt>
+            <dl aria-label="Horario">
               {l.horario.map((h) => (
                 <div key={h.dias}>
                   <dt>{h.dias}</dt>

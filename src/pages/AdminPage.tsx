@@ -5,6 +5,7 @@ import { DIAS } from '../lib/horario'
 import { getNegocio, getNegocioBase } from '../lib/repo'
 import { borrarBorrador, guardarBorrador, hayNube, iniciarSesion, leerBorrador, publicarNube } from '../lib/store'
 import { elegirTema, estiloTema } from '../lib/tema'
+import { validarNegocio } from '../lib/validar'
 
 type Upd = (fn: (d: Negocio) => void) => void
 
@@ -111,12 +112,12 @@ function SeccionEnlaces({ d, upd }: { d: Negocio; upd: Upd }) {
       <Campo label="Instagram (@usuario)" value={e.instagram} onChange={(v) => upd((x) => void (x.enlaces.instagram = vacioAUndef(v)))} />
       <Campo label="Enlace de reseñas de Google" value={e.google_review} onChange={(v) => upd((x) => void (x.enlaces.google_review = vacioAUndef(v)))} />
 
-      <h3 className="adm-sub">Wi-Fi</h3>
+      <p className="adm-sub" role="heading" aria-level={2}>Wi-Fi</p>
       <Campo label="Nombre de la red" value={e.wifi?.red} onChange={(v) => upd((x) => void (x.enlaces.wifi = v.trim() || x.enlaces.wifi?.clave ? { seguridad: 'WPA', clave: '', ...x.enlaces.wifi, red: v } : undefined))} />
       <Campo label="Clave" value={e.wifi?.clave} onChange={(v) => upd((x) => void (x.enlaces.wifi = { seguridad: 'WPA', red: '', ...x.enlaces.wifi, clave: v }))} />
       {e.wifi && <Boton peligro onClick={() => upd((x) => void (x.enlaces.wifi = undefined))}>Quitar Wi-Fi</Boton>}
 
-      <h3 className="adm-sub">Métodos de pago</h3>
+      <p className="adm-sub" role="heading" aria-level={2}>Métodos de pago</p>
       {(e.pagos ?? []).map((p, i) => (
         <fieldset className="adm-grupo" key={i}>
           <Campo label="Método" value={p.metodo} onChange={(v) => upd((x) => void (x.enlaces.pagos![i].metodo = v))} />
@@ -149,7 +150,7 @@ function SeccionLocal({ d, upd }: { d: Negocio; upd: Upd }) {
       <Campo label="Razón social (opcional)" value={l.razon_social} onChange={(v) => set((x) => void (x.razon_social = vacioAUndef(v)))} />
       <Campo label="RIF" value={l.rif} onChange={(v) => set((x) => void (x.rif = vacioAUndef(v)))} ayuda="Ej. J-12345678-9. Si lo dejas vacío no se muestra." />
       <Campo label="Dirección" area value={l.direccion} onChange={(v) => set((x) => void (x.direccion = vacioAUndef(v)))} />
-      <h3 className="adm-sub">Horario</h3>
+      <p className="adm-sub" role="heading" aria-level={2}>Horario</p>
       {(l.horario ?? []).map((h, i) => (
         <div className="adm-fila" key={i}>
           <Campo label="Días" value={h.dias} onChange={(v) => set((x) => void (x.horario![i].dias = v))} />
@@ -181,7 +182,7 @@ function SeccionAlmuerzo({ d, upd }: { d: Negocio; upd: Upd }) {
       <Campo label="Título de la sección" value={a.titulo} onChange={(v) => upd((x) => void (x.almuerzo.titulo = v))} />
       <Campo label="Todos los almuerzos incluyen (uno por línea)" area value={a.incluye.join('\n')} onChange={(v) => upd((x) => void (x.almuerzo.incluye = v.split('\n')))} />
 
-      <h3 className="adm-sub">Platos fijos</h3>
+      <p className="adm-sub" role="heading" aria-level={2}>Platos fijos</p>
       {a.platos_fijos.map((p, i) => (
         <div className="adm-fila" key={i}>
           <Campo label="Plato" value={p.nombre} onChange={(v) => upd((x) => void (x.almuerzo.platos_fijos[i].nombre = v))} />
@@ -191,7 +192,7 @@ function SeccionAlmuerzo({ d, upd }: { d: Negocio; upd: Upd }) {
       ))}
       <Boton onClick={() => upd((x) => void x.almuerzo.platos_fijos.push({ nombre: '' }))}>+ Plato fijo</Boton>
 
-      <h3 className="adm-sub">Plato de la semana</h3>
+      <p className="adm-sub" role="heading" aria-level={2}>Plato de la semana</p>
       <label className="campo adm-campo">
         Esta semana
         <select
@@ -219,7 +220,7 @@ function SeccionAlmuerzo({ d, upd }: { d: Negocio; upd: Upd }) {
       ))}
       <Boton onClick={() => upd((x) => void x.almuerzo.cuarto_plato.catalogo.push({ nombre: '' }))}>+ Plato a la rotación</Boton>
 
-      <h3 className="adm-sub">Plato del día (fijo por día de la semana)</h3>
+      <p className="adm-sub" role="heading" aria-level={2}>Plato del día (fijo por día de la semana)</p>
       {DIAS.map((dia) => (
         <div key={dia.id}>
           <PlatoCampos nombre={dia.largo} p={a.plato_del_dia[dia.id]} onChange={(p) => upd((x) => void (x.almuerzo.plato_del_dia[dia.id as DiaId] = p))} />
@@ -350,6 +351,8 @@ export function AdminPage() {
   if (!d) return <div className="cargando">Cargando…</div>
 
   const publicar = async () => {
+    const problemas = validarNegocio(d)
+    if (problemas.length) return setMsg('No se puede publicar: ' + problemas.slice(0, 3).join('; ') + (problemas.length > 3 ? ` (+${problemas.length - 3} más)` : ''))
     try {
       await publicarNube(d, token!)
       setCambios(false)
@@ -358,7 +361,7 @@ export function AdminPage() {
       if ((e as Error).message === 'SESION') {
         setToken(null)
         try { sessionStorage.removeItem('nfcmenu:token') } catch { /* nada */ }
-      } else setMsg((e as Error).message)
+      } else setMsg((e as Error).name === 'TimeoutError' || e instanceof TypeError ? 'No hay conexión con el servidor. Intenta de nuevo.' : (e as Error).message)
     }
   }
   const descargar = () => {

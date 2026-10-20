@@ -1,4 +1,5 @@
 import type { Negocio } from '../types'
+import { validarNegocio } from './validar'
 
 /**
  * Persistencia del panel admin.
@@ -13,14 +14,13 @@ const ANON = (import.meta.env.VITE_SUPABASE_ANON ?? import.meta.env.VITE_SUPABAS
 export const hayNube = Boolean(URL_BASE && ANON)
 
 export function esNegocioValido(x: unknown): x is Negocio {
-  const n = x as Negocio
-  return !!n && typeof n.slug === 'string' && Array.isArray(n.categorias) && !!n.almuerzo && !!n.temas && !!n.enlaces
+  return validarNegocio(x).length === 0
 }
 
 export async function leerNube(slug: string): Promise<Negocio | null> {
   if (!hayNube) return null
   try {
-    const r = await fetch(`${URL_BASE}/rest/v1/menu_docs?slug=eq.${encodeURIComponent(slug)}&select=data`, { headers: { apikey: ANON! } })
+    const r = await fetch(`${URL_BASE}/rest/v1/menu_docs?slug=eq.${encodeURIComponent(slug)}&select=data`, { headers: { apikey: ANON! }, signal: AbortSignal.timeout(4000) })
     if (!r.ok) return null
     const filas = (await r.json()) as { data: unknown }[]
     return esNegocioValido(filas[0]?.data) ? filas[0].data : null
@@ -34,6 +34,7 @@ export async function iniciarSesion(email: string, clave: string): Promise<strin
     method: 'POST',
     headers: { apikey: ANON!, 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password: clave }),
+    signal: AbortSignal.timeout(10000),
   })
   if (!r.ok) throw new Error('Correo o clave incorrectos')
   const j = (await r.json()) as { access_token: string }
@@ -45,6 +46,7 @@ export async function publicarNube(n: Negocio, token: string): Promise<void> {
     method: 'POST',
     headers: { apikey: ANON!, Authorization: `Bearer ${token}`, 'Content-Type': 'application/json', Prefer: 'resolution=merge-duplicates,return=minimal' },
     body: JSON.stringify({ slug: n.slug, data: n, updated_at: new Date().toISOString() }),
+    signal: AbortSignal.timeout(15000),
   })
   if (r.status === 401) throw new Error('SESION')
   if (!r.ok) throw new Error('No se pudo publicar (¿tu usuario tiene permiso para este negocio?)')

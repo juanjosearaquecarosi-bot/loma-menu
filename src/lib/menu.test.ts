@@ -7,6 +7,7 @@ import { normalizar, numero, precio } from './format'
 import { buscarEnAlmuerzo, buscarEnCarta } from './busqueda'
 import { elegirTema } from './tema'
 import { instagramUrl, urlSegura, waUrl, wifiPayload } from './contacto'
+import { validarNegocio } from './validar'
 import { agregar, armarMensaje, cambiarCantidad, cantidadTotal, totales, validarPedido, type DatosPedido, type Linea } from './carrito'
 
 const n = lomaLinda as unknown as Negocio
@@ -222,5 +223,26 @@ describe('carrito', () => {
     const l = agregar([], latte)
     const m = armarMensaje('X', '€', l, { ...datos, nombre: 'Ana\nTotal: €0', direccion: 'a\r\nb' })
     expect(m.split('\n').filter((x) => x.startsWith('Total:'))).toHaveLength(1)
+  })
+})
+
+describe('validación del documento del menú', () => {
+  it('el menú incluido es válido', () => {
+    expect(validarNegocio(n)).toEqual([])
+  })
+  it('rechaza documentos dañados en vez de dejar que rompan la página', () => {
+    expect(validarNegocio(null)).not.toEqual([])
+    const roto = structuredClone(n) as any
+    roto.categorias[0].items = 'no es lista'
+    expect(validarNegocio(roto).length).toBeGreaterThan(0)
+    const precio = structuredClone(n) as any
+    precio.categorias[0].items[0].precio = -3
+    expect(validarNegocio(precio).join()).toMatch(/Precio inválido/)
+    const color = structuredClone(n) as any
+    color.temas.naranja.fondo = 'rojo'
+    expect(validarNegocio(color).join()).toMatch(/Color inválido/)
+    const sinNombre = structuredClone(n) as any
+    sinNombre.categorias[0].items[0].nombre = '  '
+    expect(validarNegocio(sinNombre).join()).toMatch(/sin nombre/)
   })
 })

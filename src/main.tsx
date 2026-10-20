@@ -9,9 +9,11 @@ import { QRRedirect } from './pages/QRRedirect'
 import { AdminPage } from './pages/AdminPage'
 import { NoEncontrado } from './pages/NoEncontrado'
 import { listarSlugs } from './lib/repo'
+import { Limite } from './components/Limite'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
+    <Limite>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Navigate to={`/b/${listarSlugs()[0]}`} replace />} />
@@ -23,6 +25,7 @@ createRoot(document.getElementById('root')!).render(
         <Route path="*" element={<NoEncontrado />} />
       </Routes>
     </BrowserRouter>
+    </Limite>
   </StrictMode>,
 )
 
