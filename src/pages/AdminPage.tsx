@@ -378,7 +378,8 @@ export function AdminPage() {
     borrarBorrador(slug)
     const b = getNegocioBase(slug)
     if (b) setD(b)
-    setCambios(false)
+    // Con nube, la versión del código puede diferir de la publicada: hay que poder publicarla.
+    setCambios(hayNube)
   }
 
   return (
