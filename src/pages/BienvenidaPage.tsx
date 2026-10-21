@@ -3,7 +3,7 @@ import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { useNegocio } from '../lib/repo'
 import { aplicarThemeColor, elegirTema, estiloTema } from '../lib/tema'
 import { instagramUrl, mensajeWhatsAppPorDefecto, urlSegura, waUrl, wifiPayload } from '../lib/contacto'
-import { Emblema, PieLegal } from '../components/Marca'
+import { DatosFiscales, Emblema, PieLegal } from '../components/Marca'
 import { PagosLista } from '../components/Pagos'
 import { QrSvg } from '../components/QrSvg'
 import { NoEncontrado } from './NoEncontrado'
@@ -37,6 +37,7 @@ export function BienvenidaPage() {
         <div className="hero-marca">{n.logo ? <img className="logo" src={n.logo} alt={n.nombre} width="230" height="164" /> : <Emblema />}</div>
         <h1>{n.nombre}</h1>
         <p className="subtitulo">{n.subtitulo}</p>
+        <DatosFiscales n={n} />
         <Link className="cta" to={`/m/${n.slug}${qs}`}>
           Ver el menú <span aria-hidden="true">→</span>
         </Link>

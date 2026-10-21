@@ -3,7 +3,7 @@ import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { useNegocio } from '../lib/repo'
 import { buscarEnAlmuerzo, buscarEnCarta } from '../lib/busqueda'
 import { aplicarThemeColor, elegirTema, estiloTema } from '../lib/tema'
-import { Emblema, PieLegal } from '../components/Marca'
+import { DatosFiscales, Emblema, PieLegal } from '../components/Marca'
 import { Enlaces } from '../components/Enlaces'
 import { Almuerzo } from '../components/Almuerzo'
 import { Carta } from '../components/Carta'
@@ -97,6 +97,7 @@ export function MenuPage() {
           <h1>{n.nombre}</h1>
           <p className="subtitulo">{n.subtitulo}</p>
           <p className="lema">{n.lema}</p>
+          <DatosFiscales n={n} />
           <Enlaces n={n} />
         </header>
 

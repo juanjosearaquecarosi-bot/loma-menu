@@ -65,15 +65,17 @@ describe('tema semanal naranja/negro', () => {
 })
 
 describe('formato', () => {
-  it('respeta la coma decimal del menú impreso y los miles con punto', () => {
-    expect(numero(4.5)).toBe('4,5')
+  it('coma decimal con dos cifras y miles con punto', () => {
+    expect(numero(4.5)).toBe('4,50')
     expect(numero(6)).toBe('6')
-    expect(numero(15.5)).toBe('15,5')
+    expect(numero(15.5)).toBe('15,50')
     expect(numero(4000)).toBe('4.000')
-    expect(numero(1234567.5)).toBe('1.234.567,5')
+    expect(numero(1.3)).toBe('1,30')
+    expect(numero(4.25)).toBe('4,25')
+    expect(numero(1234567.5)).toBe('1.234.567,50')
   })
   it('códigos de moneda llevan espacio, símbolos no', () => {
-    expect(precio(4.5, '€')).toBe('€4,5')
+    expect(precio(4.5, '€')).toBe('€4,50')
     expect(precio(4000, 'COP')).toBe('COP 4.000')
   })
   it('normaliza tildes', () => {
@@ -121,16 +123,19 @@ describe('integridad de datos', () => {
   it('cada ítem tiene precio, precios o queda marcado como sin precio', () => {
     for (const { i } of items) expect(i.precio !== undefined || i.precios !== undefined).toBe(true)
   })
-  it('desayunos: 3 empanadas a 4.000 y 7 pasteles (6 a 3.000 y 1 a 4.000), todo en COP', () => {
+  it('desayunos en €: 3 empanadas a 1,30 y 7 pasteles (6 a 1 y 1 a 1,30)', () => {
     const d = n.categorias.find((c) => c.id === 'desayunos')!
     const emp = d.items.filter((i) => i.subgrupo === 'Empanadas')
     const pas = d.items.filter((i) => i.subgrupo === 'Pasteles')
     expect(emp).toHaveLength(3)
-    expect(emp.every((i) => i.precio === 4000)).toBe(true)
+    expect(emp.every((i) => i.precio === 1.3)).toBe(true)
     expect(pas).toHaveLength(7)
-    expect(pas.filter((i) => i.precio === 3000)).toHaveLength(6)
-    expect(pas.filter((i) => i.precio === 4000).map((i) => i.nombre)).toEqual(['Tocineta, pollo y maíz'])
-    expect(d.items.every((i) => i.moneda === 'COP')).toBe(true)
+    expect(pas.filter((i) => i.precio === 1)).toHaveLength(6)
+    expect(pas.filter((i) => i.precio === 1.3).map((i) => i.nombre)).toEqual(['Tocineta, pollo y maíz'])
+  })
+  it('todo el menú va en la moneda del negocio (€), sin monedas propias', () => {
+    expect(n.moneda).toBe('€')
+    expect(items.filter(({ i }) => i.moneda !== undefined)).toEqual([])
   })
   it('los dos temas definen todos los colores', () => {
     for (const t of Object.values(n.temas)) for (const v of Object.values(t)) expect(v).toMatch(/^#[0-9a-f]{6}$/i)

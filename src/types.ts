@@ -17,7 +17,7 @@ export interface Item {
   /** Opcional. Si no hay foto, el diseño funciona igual (sin placeholders falsos). */
   imagen?: string
   etiquetas?: string[]
-  /** Moneda distinta a la del negocio (ej. desayunos en COP). */
+  /** Moneda distinta a la del negocio. Normalmente vacía: todo el menú va en €. */
   moneda?: string
 }
 
@@ -34,6 +34,8 @@ export interface Categoria {
   nota?: string
   /** Texto libre, ej. "Todos los días de 7:00 a 10:00". Solo se muestra si existe. */
   horario?: string
+  /** Foto genérica de portada de la sección (ruta o URL). Opcional. */
+  imagen?: string
   columnas?: Columna[]
   items: Item[]
 }
@@ -96,7 +98,7 @@ export interface Negocio {
   zona_horaria: string
   /** Datos legales y de ubicación (pie de página). Solo se muestra lo que exista. */
   local?: { rif?: string; razon_social?: string; direccion?: string; horario?: { dias: string; horas: string }[] }
-  /** URL o ruta del logo del cliente. Si falta se usa un emblema genérico de relleno. */
+  /** URL o ruta del logo del cliente. Si falta se usa el isotipo de la marca. */
   logo?: string
   temas: Record<TemaId, Tema>
   /** 'auto' alterna los dos temas cada semana; o fija uno. */

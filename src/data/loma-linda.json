@@ -107,76 +107,67 @@
       "id": "desayunos",
       "nombre": "Desayunos",
       "grupo": "desayuno",
+      "imagen": "/categorias/empanada.webp",
       "items": [
         {
           "id": "des-emp-carne",
           "nombre": "Carne mechada",
           "subgrupo": "Empanadas",
-          "precio": 4000,
-          "moneda": "COP"
+          "precio": 1.3
         },
         {
           "id": "des-emp-pollo",
           "nombre": "Pollo",
           "subgrupo": "Empanadas",
-          "precio": 4000,
-          "moneda": "COP"
+          "precio": 1.3
         },
         {
           "id": "des-emp-mixta",
           "nombre": "Mixta",
           "subgrupo": "Empanadas",
-          "precio": 4000,
-          "moneda": "COP"
+          "precio": 1.3
         },
         {
           "id": "des-pas-carne",
           "nombre": "Carne mechada",
           "subgrupo": "Pasteles",
-          "precio": 3000,
-          "moneda": "COP"
+          "precio": 1
         },
         {
           "id": "des-pas-pollo",
           "nombre": "Pollo",
           "subgrupo": "Pasteles",
-          "precio": 3000,
-          "moneda": "COP"
+          "precio": 1
         },
         {
           "id": "des-pas-arroz",
           "nombre": "Arroz con carne",
           "subgrupo": "Pasteles",
-          "precio": 3000,
-          "moneda": "COP"
+          "precio": 1
         },
         {
           "id": "des-pas-queso",
           "nombre": "Queso",
           "subgrupo": "Pasteles",
-          "precio": 3000,
-          "moneda": "COP"
+          "precio": 1
         },
         {
           "id": "des-pas-queso-boc",
           "nombre": "Queso con bocadillo",
           "subgrupo": "Pasteles",
-          "precio": 3000,
-          "moneda": "COP"
+          "precio": 1
         },
         {
           "id": "des-pas-mixto",
           "nombre": "Mixto",
           "subgrupo": "Pasteles",
-          "precio": 3000,
-          "moneda": "COP"
+          "precio": 1
         },
         {
           "id": "des-pas-tocineta",
           "nombre": "Tocineta, pollo y maíz",
           "subgrupo": "Pasteles",
-          "precio": 4000,
-          "moneda": "COP"
+          "precio": 1.3
         }
       ]
     },
@@ -203,6 +194,7 @@
           "label": "Extra"
         }
       ],
+      "imagen": "/categorias/cafe.webp",
       "items": [
         {
           "id": "affogato",
@@ -315,6 +307,7 @@
       "id": "bebidas",
       "nombre": "Bebidas",
       "grupo": "cafe",
+      "imagen": "/categorias/batido.webp",
       "items": [
         {
           "id": "batidos-frappe",
@@ -353,6 +346,7 @@
       "id": "pasteleria",
       "nombre": "Pastelería",
       "grupo": "cafe",
+      "imagen": "/categorias/croissant.webp",
       "items": [
         {
           "id": "arepa-integral",
@@ -385,6 +379,7 @@
       "id": "reposteria",
       "nombre": "Repostería",
       "grupo": "cafe",
+      "imagen": "/categorias/brownie.webp",
       "items": [
         {
           "id": "alfajor",
@@ -418,6 +413,7 @@
       "nombre": "Hamburguesas",
       "grupo": "comida",
       "nota": "Todas nuestras hamburguesas llevan jamón, queso amarillo, pepinillos, cebolla, tomate, lechuga y papitas chips.",
+      "imagen": "/categorias/hamburguesa.webp",
       "items": [
         {
           "id": "hb-carne",
@@ -450,6 +446,7 @@
           "label": "Tamaño 2"
         }
       ],
+      "imagen": "/categorias/pizza.webp",
       "items": [
         {
           "id": "pz-campesina",
@@ -511,6 +508,7 @@
       "id": "submarinos",
       "nombre": "Submarinos",
       "grupo": "comida",
+      "imagen": "/categorias/submarino.webp",
       "items": [
         {
           "id": "sub-clasico",
@@ -543,6 +541,7 @@
       "id": "sandwiches",
       "nombre": "Sándwiches",
       "grupo": "comida",
+      "imagen": "/categorias/sandwich.webp",
       "items": [
         {
           "id": "sw-croissant-choc",
@@ -570,6 +569,7 @@
       "id": "club-house",
       "nombre": "Club House",
       "grupo": "comida",
+      "imagen": "/categorias/club-house.webp",
       "items": [
         {
           "id": "ch-especial",
@@ -587,6 +587,7 @@
       "id": "extras",
       "nombre": "Extras",
       "grupo": "comida",
+      "imagen": "/categorias/papas.webp",
       "items": [
         {
           "id": "ex-chips",
@@ -606,8 +607,7 @@
         {
           "id": "ex-tequenos",
           "nombre": "Tequeños",
-          "precio": 3.5,
-          "moneda": "$"
+          "precio": 3.5
         }
       ]
     }
@@ -640,6 +640,7 @@
     "activo": true
   },
   "local": {
+    "rif": "J-503071770",
     "direccion": "5ta Avenida (Avenida Francisco Javier García de Hevia), entre las Calles 5 y 6, centro de San Cristóbal, Táchira.",
     "horario": [
       {

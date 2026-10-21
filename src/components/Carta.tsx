@@ -125,6 +125,7 @@ export function Carta({ n, numeroInicial }: { n: Negocio; numeroInicial: number 
             </span>
             <h2 id={`t-${c.id}`}>{c.nombre}</h2>
           </header>
+          {c.imagen && <img className="portada" src={c.imagen} alt="" loading="lazy" decoding="async" width="900" height="500" />}
           {c.horario && <p className="horario">{c.horario}</p>}
           {c.nota && <p className="nota">{c.nota}</p>}
           {i === 0 && activo && <p className="nota pista">Toca + o el precio para armar tu pedido por WhatsApp.</p>}

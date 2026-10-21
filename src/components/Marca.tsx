@@ -1,23 +1,22 @@
 import type { Negocio } from '../types'
 
-/** Marca de relleno (sol naciente sobre una loma) para negocios sin logo. Monocromática: usa los colores del tema. */
-export function Emblema({ size = 64, className = '' }: { size?: number; className?: string }) {
-  const rayos = Array.from({ length: 7 }, (_, i) => {
-    const a = Math.PI + (i * Math.PI) / 6
-    const x1 = 50 + Math.cos(a) * 24
-    const y1 = 50 + Math.sin(a) * 24
-    const x2 = 50 + Math.cos(a) * 38
-    const y2 = 50 + Math.sin(a) * 38
-    return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} />
-  })
+/**
+ * Isotipo de la marca (montaña con la casita). Se pinta como máscara para tomar el color del tema
+ * (`color`), así se lee igual sobre el fondo naranja que sobre el negro.
+ */
+export function Emblema({ size = 96, className = '' }: { size?: number; className?: string }) {
+  return <span role="img" aria-label="Isotipo" className={`emblema ${className}`} style={{ width: size, height: Math.round(size * 1.12) }} />
+}
+
+/** RIF y razón social destacados, aparte de la firma de NFC Táchira. */
+export function DatosFiscales({ n }: { n: Negocio }) {
+  const l = n.local
+  if (!l?.rif && !l?.razon_social) return null
   return (
-    <svg width={size} height={size * 0.62} viewBox="0 0 100 62" role="img" aria-label="Emblema" className={`emblema ${className}`}>
-      <g stroke="var(--titulo)" strokeWidth="4" strokeLinecap="round">
-        {rayos}
-      </g>
-      <path d="M24 54 L50 30 L76 54 Z" fill="currentColor" />
-      <line x1="10" y1="56" x2="90" y2="56" stroke="var(--titulo)" strokeWidth="4" strokeLinecap="round" />
-    </svg>
+    <p className="fiscal">
+      {l.razon_social && <span>{l.razon_social}</span>}
+      {l.rif && <strong>RIF {l.rif}</strong>}
+    </p>
   )
 }
 
@@ -45,11 +44,7 @@ export function PieLegal({ n }: { n: Negocio }) {
           )}
         </div>
       )}
-      <p className="firma">
-        {l?.razon_social && <>{l.razon_social} · </>}
-        {l?.rif && <>RIF {l.rif} · </>}
-        Menú digital creado por NFC Táchira
-      </p>
+      <p className="firma">Menú digital creado por NFC Táchira</p>
     </>
   )
 }

@@ -282,6 +282,7 @@ function SeccionCarta({ d, upd }: { d: Negocio; upd: Upd }) {
             </select>
           </label>
           <Campo label="Horario (opcional)" value={c.horario} onChange={(v) => upd((x) => void (x.categorias[ci].horario = vacioAUndef(v)))} />
+          <Campo label="Foto de la sección (ruta o URL, opcional)" value={c.imagen} onChange={(v) => upd((x) => void (x.categorias[ci].imagen = vacioAUndef(v)))} />
           {c.items.map((it, ii) => (
             <ItemEd key={it.id} it={it} cat={c} ci={ci} ii={ii} upd={upd} />
           ))}

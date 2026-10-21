@@ -105,10 +105,12 @@ h2 { margin: 0; font-size: 30px; line-height: 1; overflow-wrap: anywhere; }
 .platos .nombre, .plato-dia .nombre { font-size: 26px; line-height: 1.1; }
 .platos .detalle { font-size: 15px; font-weight: 500; color: var(--suave); }
 .etq-sem { font-size: 11px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; }
-.plato-dia { display: flex; flex-direction: column; gap: 4px; margin-top: 22px; padding: 20px; border-radius: 22px; background: var(--oscuro); color: var(--claro); }
-.plato-dia .etq { font-size: 11px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; color: var(--etiqueta); }
-.plato-dia .nombre { color: var(--claro); font-size: 28px; }
-.plato-dia .detalle { font-size: 15px; color: color-mix(in srgb, var(--claro) 78%, transparent); }
+/* Plato del día en naranja (pedido del cliente). Un naranja más claro que el fondo de marca y con borde,
+   para que destaque también en el tema naranja. */
+.plato-dia { display: flex; flex-direction: column; gap: 4px; margin-top: 22px; padding: 20px; border: 3px solid var(--tinta); border-radius: 22px; background: #ff9a1f; color: #120c08; }
+.plato-dia .etq { font-size: 11px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; color: #120c08; }
+.plato-dia .nombre { color: #120c08; font-size: 28px; }
+.plato-dia .detalle { font-size: 15px; font-weight: 500; color: #2a1a0c; }
 .incluye p { margin: 24px 0 8px; font-size: 13px; font-weight: 500; color: var(--suave); }
 .tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
 .tags li { padding: 5px 12px; border: 1.5px solid var(--tinta); border-radius: 999px; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
@@ -122,6 +124,7 @@ h2 { margin: 0; font-size: 30px; line-height: 1; overflow-wrap: anywhere; }
 .precio { font-size: 18px; font-weight: 800; font-feature-settings: 'tnum'; white-space: nowrap; color: var(--acento); }
 .precio small { margin-right: 3px; font-size: 11px; font-weight: 800; color: var(--suave); }
 .precio.sin, .sin { font-size: 13px; font-weight: 600; color: var(--suave); }
+.portada { width: 100%; height: auto; aspect-ratio: 9 / 5; margin: 14px 0 4px; border-radius: 22px; object-fit: cover; }
 .foto { flex: none; width: 64px; height: 64px; border-radius: 14px; object-fit: cover; }
 
 .mas { flex: none; width: 44px; height: 44px; border: 0; border-radius: 50%; background: var(--acento); color: var(--sobre-acento); font-size: 26px; font-weight: 700; line-height: 1; cursor: pointer; }
@@ -171,6 +174,11 @@ a.hub-card:hover { background: color-mix(in srgb, var(--tinta) 8%, transparent);
 /* ---------- Pie ---------- */
 .pie { margin-top: 36px; margin-bottom: 0; padding: 40px 20px calc(env(safe-area-inset-bottom) + 36px); background: var(--oscuro); color: var(--claro); }
 .pie .emblema { color: var(--etiqueta); }
+.emblema { display: block; background: currentColor; -webkit-mask: url(/isotipo.png) center / contain no-repeat; mask: url(/isotipo.png) center / contain no-repeat; }
+.hero .emblema { color: var(--titulo); }
+.tema-negro .hero .emblema { color: var(--acento); }
+.fiscal { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; margin: 18px 0 0; font-size: 13px; font-weight: 600; }
+.fiscal strong { padding: 4px 12px; border: 2px solid var(--tinta); border-radius: 999px; font-weight: 800; letter-spacing: .06em; }
 .pie .lema { margin-top: 18px; color: var(--claro); }
 .pie .chip { margin-top: 22px; border-color: var(--claro); color: var(--claro); }
 .frase { margin: 18px 0 0; font-size: 12px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; color: var(--etiqueta); }
