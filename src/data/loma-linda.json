@@ -439,11 +439,11 @@
       "columnas": [
         {
           "id": "t1",
-          "label": "Tamaño 1"
+          "label": "Pequeña"
         },
         {
           "id": "t2",
-          "label": "Tamaño 2"
+          "label": "Grande"
         }
       ],
       "imagen": "/categorias/pizza.webp",
