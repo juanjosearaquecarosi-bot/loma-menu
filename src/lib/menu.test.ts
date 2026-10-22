@@ -9,6 +9,7 @@ import { elegirTema } from './tema'
 import { instagramUrl, urlSegura, waUrl, wifiPayload } from './contacto'
 import { validarNegocio } from './validar'
 import { agregar, armarMensaje, cambiarCantidad, cantidadTotal, totales, validarPedido, type DatosPedido, type Linea } from './carrito'
+import { esMasNueva } from './repo'
 
 const n = lomaLinda as unknown as Negocio
 
@@ -249,5 +250,16 @@ describe('validación del documento del menú', () => {
     const sinNombre = structuredClone(n) as any
     sinNombre.categorias[0].items[0].nombre = '  '
     expect(validarNegocio(sinNombre).join()).toMatch(/sin nombre/)
+  })
+})
+
+describe('versión publicada vs. código', () => {
+  it('la nube solo gana si se publicó después del cambio en el código', () => {
+    expect(esMasNueva('2026-10-23T00:00:00Z', '2026-10-22T00:00:00Z')).toBe(true)
+    expect(esMasNueva('2026-10-21T00:00:00Z', '2026-10-22T00:00:00Z')).toBe(false)
+    expect(esMasNueva('2026-10-21T00:00:00Z')).toBe(true)
+  })
+  it('el JSON incluido trae fecha de actualización', () => {
+    expect(Number.isNaN(Date.parse(n.actualizado!))).toBe(false)
   })
 })

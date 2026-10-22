@@ -17,13 +17,14 @@ export function esNegocioValido(x: unknown): x is Negocio {
   return validarNegocio(x).length === 0
 }
 
-export async function leerNube(slug: string): Promise<Negocio | null> {
+/** Menú publicado y cuándo se publicó (para compararlo con la versión del código). */
+export async function leerNube(slug: string): Promise<{ data: Negocio; publicado: string } | null> {
   if (!hayNube) return null
   try {
-    const r = await fetch(`${URL_BASE}/rest/v1/menu_docs?slug=eq.${encodeURIComponent(slug)}&select=data`, { headers: { apikey: ANON! }, signal: AbortSignal.timeout(4000) })
+    const r = await fetch(`${URL_BASE}/rest/v1/menu_docs?slug=eq.${encodeURIComponent(slug)}&select=data,updated_at`, { headers: { apikey: ANON! }, signal: AbortSignal.timeout(4000) })
     if (!r.ok) return null
-    const filas = (await r.json()) as { data: unknown }[]
-    return esNegocioValido(filas[0]?.data) ? filas[0].data : null
+    const filas = (await r.json()) as { data: unknown; updated_at: string }[]
+    return esNegocioValido(filas[0]?.data) ? { data: filas[0].data, publicado: filas[0].updated_at } : null
   } catch {
     return null
   }

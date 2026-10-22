@@ -36,7 +36,11 @@ if (import.meta.env.DEV) {
   ENLACES.push({ codigo: 'demo-pr', slug: 'demo-pruebas', activo: true })
 }
 
-/** Publicado en la nube (si hay) > JSON incluido. Con borrador=true, primero el borrador local del panel. */
+/**
+ * Gana la versión más reciente: la publicada en la nube solo si se publicó después del
+ * `actualizado` del JSON incluido. Así un cambio en el código no exige volver a publicar desde el panel.
+ * Con borrador=true, primero el borrador local del panel.
+ */
 export async function getNegocio(slug: string, borrador = false): Promise<Negocio | null> {
   if (borrador) {
     const b = leerBorrador(slug)
@@ -44,9 +48,15 @@ export async function getNegocio(slug: string, borrador = false): Promise<Negoci
   }
   if (hayNube && NEGOCIOS[slug]) {
     const r = await leerNube(slug)
-    if (r) return r
+    if (r && esMasNueva(r.publicado, NEGOCIOS[slug].actualizado)) return r.data
   }
   return NEGOCIOS[slug] ?? null
+}
+
+/** Sin fecha en el código, la nube siempre gana (comportamiento anterior). */
+export function esMasNueva(publicado: string, actualizado?: string): boolean {
+  if (!actualizado) return true
+  return Date.parse(publicado) > Date.parse(actualizado)
 }
 
 /** Versión incluida en el código (base para "descartar cambios"). */

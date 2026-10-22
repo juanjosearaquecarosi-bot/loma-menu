@@ -90,6 +90,8 @@ export interface Enlaces {
 
 export interface Negocio {
   slug: string
+  /** ISO de la última edición en el código. Una publicación del panel posterior a esta fecha la reemplaza. */
+  actualizado?: string
   nombre: string
   subtitulo: string
   lema: string
