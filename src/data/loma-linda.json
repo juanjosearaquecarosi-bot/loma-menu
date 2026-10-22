@@ -1,16 +1,12 @@
 {
   "slug": "loma-linda",
-  "actualizado": "2026-10-22T18:22:43Z",
+  "actualizado": "2026-10-22T18:26:25Z",
   "lema": "Sabor que reconforta, tradición que nos une.",
   "local": {
     "rif": "J-503071770",
     "horario": [
       {
-        "dias": "Lunes",
-        "horas": "7:00 a. m. – 6:00 p. m."
-      },
-      {
-        "dias": "Martes a sábado",
+        "dias": "Lunes a sábado",
         "horas": "8:00 a. m. – 6:00 p. m."
       },
       {
@@ -86,7 +82,7 @@
         "datos": [
           {
             "valor": "Gustavo Omana",
-            "etiqueta": "Nombre"
+            "etiqueta": "Nombre "
           },
           {
             "valor": "3138687681",
@@ -99,7 +95,7 @@
     "whatsapp": "584124215818",
     "instagram": "lomalindasc",
     "google_review": "https://search.google.com/local/writereview?placeid=ChIJebZD3fJtZo4RHmaazlklkPk",
-    "whatsapp_mensaje": "¡Hola!✨ \n\nQuisiera realizar un pedido☕🍽️"
+    "whatsapp_mensaje": "¡Hola!✨ \nQuisiera realizar un pedido☕🍽️"
   },
   "pedidos": {
     "activo": true
