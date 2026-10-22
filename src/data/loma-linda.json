@@ -1,52 +1,107 @@
 {
-  "slug": "loma-linda",
-  "nombre": "Loma Linda",
-  "subtitulo": "Coffee House San Cristóbal",
   "lema": "Sabor que reconforta, tradición que nos une.",
-  "ciudad_frase": "Hecho en el corazón de San Cristóbal",
+  "slug": "loma-linda",
+  "local": {
+    "rif": "J-503071770",
+    "horario": [
+      {
+        "dias": "Lunes",
+        "horas": "7:00 a. m. – 6:00 p. m."
+      },
+      {
+        "dias": "Martes a sábado",
+        "horas": "8:00 a. m. – 6:00 p. m."
+      },
+      {
+        "dias": "Domingo",
+        "horas": "Cerrado"
+      }
+    ],
+    "direccion": "5ta Avenida (Avenida Francisco Javier García de Hevia), entre las Calles 5 y 6, centro de San Cristóbal, Táchira."
+  },
+  "temas": {
+    "negro": {
+      "claro": "#FFFFFF",
+      "fondo": "#0F0B09",
+      "tinta": "#F5EFE8",
+      "acento": "#F0561C",
+      "oscuro": "#1C1613",
+      "titulo": "#FFFFFF",
+      "etiqueta": "#F0561C",
+      "sobre_acento": "#0F0B09"
+    },
+    "naranja": {
+      "claro": "#FFFFFF",
+      "fondo": "#F0561C",
+      "tinta": "#120C08",
+      "acento": "#0F0B09",
+      "oscuro": "#0F0B09",
+      "titulo": "#FFFFFF",
+      "etiqueta": "#F0561C",
+      "sobre_acento": "#FFFFFF"
+    }
+  },
   "moneda": "€",
-  "zona_horaria": "America/Caracas",
+  "nombre": "Loma Linda",
   "enlaces": {
+    "wifi": {
+      "red": "CMURIBANTE",
+      "clave": "conpannacoffee2025",
+      "seguridad": "WPA"
+    },
+    "pagos": [
+      {
+        "datos": [
+          {
+            "valor": "1205373702",
+            "etiqueta": "ID"
+          },
+          {
+            "valor": "gustavoaomanac@gmail.com",
+            "etiqueta": "Correo"
+          }
+        ],
+        "metodo": "Binance Pay"
+      },
+      {
+        "datos": [
+          {
+            "valor": "0412-4215818",
+            "etiqueta": "Celular"
+          },
+          {
+            "valor": "V-13649620",
+            "etiqueta": "Identificación"
+          },
+          {
+            "valor": "0134",
+            "etiqueta": "Código banco"
+          }
+        ],
+        "metodo": "Pago Móvil Banesco",
+        "detalle": "Enviar capture al 0412 4215 818"
+      },
+      {
+        "datos": [
+          {
+            "valor": "Gustavo Omana",
+            "etiqueta": "Nombre"
+          },
+          {
+            "valor": "3138687681",
+            "etiqueta": "Numero"
+          }
+        ],
+        "metodo": "Nequi"
+      }
+    ],
     "whatsapp": "584124215818",
     "instagram": "lomalindasc",
     "google_review": "https://search.google.com/local/writereview?placeid=ChIJebZD3fJtZo4RHmaazlklkPk",
-    "pagos": [
-      {
-        "metodo": "Binance Pay",
-        "datos": [
-          {
-            "etiqueta": "ID",
-            "valor": "1205373702"
-          },
-          {
-            "etiqueta": "Correo",
-            "valor": "gustavoaomanac@gmail.com"
-          }
-        ]
-      },
-      {
-        "metodo": "Pago Móvil Banesco",
-        "detalle": "Enviar capture al 0412 4215 818",
-        "datos": [
-          {
-            "etiqueta": "Celular",
-            "valor": "0412-4215818"
-          },
-          {
-            "etiqueta": "Identificación",
-            "valor": "V-13649620"
-          },
-          {
-            "etiqueta": "Código banco",
-            "valor": "0134"
-          }
-        ]
-      }
-    ]
+    "whatsapp_mensaje": "¡Hola!✨ \n\nQuisiera realizar un pedido☕🍽️"
   },
-  "suscripcion": {
-    "estado": "activa",
-    "vence": null
+  "pedidos": {
+    "activo": true
   },
   "almuerzo": {
     "titulo": "Menú de almuerzo",
@@ -56,6 +111,17 @@
       "Ensalada",
       "Jugo"
     ],
+    "cuarto_plato": {
+      "actual": null,
+      "catalogo": [
+        {
+          "nombre": "Pasticho"
+        },
+        {
+          "nombre": "Pechuga napolitana"
+        }
+      ]
+    },
     "platos_fijos": [
       {
         "nombre": "Pechuga",
@@ -74,127 +140,99 @@
       "lunes": {
         "nombre": "Alas de pollo en BBQ"
       },
-      "martes": {
-        "nombre": "Carne guisada"
-      },
-      "miercoles": {
-        "nombre": "Costilla asada"
-      },
       "jueves": {
         "nombre": "Pollo guisado"
       },
+      "martes": {
+        "nombre": "Carne guisada"
+      },
       "viernes": {
         "nombre": "Croqueta de carne"
+      },
+      "miercoles": {
+        "nombre": "Costilla asada"
       }
     },
     "dias_sin_servicio": [
       "domingo"
-    ],
-    "cuarto_plato": {
-      "actual": null,
-      "catalogo": [
-        {
-          "nombre": "Pasticho"
-        },
-        {
-          "nombre": "Pechuga napolitana"
-        }
-      ]
-    }
+    ]
   },
+  "tema_par": "naranja",
+  "subtitulo": "Coffee House San Cristóbal",
+  "tema_modo": "auto",
   "categorias": [
     {
       "id": "desayunos",
-      "nombre": "Desayunos",
       "grupo": "desayuno",
-      "imagen": "/categorias/empanada.webp",
       "items": [
         {
           "id": "des-emp-carne",
           "nombre": "Carne mechada",
-          "subgrupo": "Empanadas",
-          "precio": 1.3
+          "precio": 1.3,
+          "subgrupo": "Empanadas"
         },
         {
           "id": "des-emp-pollo",
           "nombre": "Pollo",
-          "subgrupo": "Empanadas",
-          "precio": 1.3
+          "precio": 1.3,
+          "subgrupo": "Empanadas"
         },
         {
           "id": "des-emp-mixta",
           "nombre": "Mixta",
-          "subgrupo": "Empanadas",
-          "precio": 1.3
+          "precio": 1.3,
+          "subgrupo": "Empanadas"
         },
         {
           "id": "des-pas-carne",
           "nombre": "Carne mechada",
-          "subgrupo": "Pasteles",
-          "precio": 1
+          "precio": 1,
+          "subgrupo": "Pasteles"
         },
         {
           "id": "des-pas-pollo",
           "nombre": "Pollo",
-          "subgrupo": "Pasteles",
-          "precio": 1
+          "precio": 1,
+          "subgrupo": "Pasteles"
         },
         {
           "id": "des-pas-arroz",
           "nombre": "Arroz con carne",
-          "subgrupo": "Pasteles",
-          "precio": 1
+          "precio": 1,
+          "subgrupo": "Pasteles"
         },
         {
           "id": "des-pas-queso",
           "nombre": "Queso",
-          "subgrupo": "Pasteles",
-          "precio": 1
+          "precio": 1,
+          "subgrupo": "Pasteles"
         },
         {
           "id": "des-pas-queso-boc",
           "nombre": "Queso con bocadillo",
-          "subgrupo": "Pasteles",
-          "precio": 1
+          "precio": 1,
+          "subgrupo": "Pasteles"
         },
         {
           "id": "des-pas-mixto",
           "nombre": "Mixto",
-          "subgrupo": "Pasteles",
-          "precio": 1
+          "precio": 1,
+          "subgrupo": "Pasteles"
         },
         {
           "id": "des-pas-tocineta",
           "nombre": "Tocineta, pollo y maíz",
-          "subgrupo": "Pasteles",
-          "precio": 1.3
+          "precio": 1.3,
+          "subgrupo": "Pasteles"
         }
-      ]
+      ],
+      "imagen": "/categorias/empanada.webp",
+      "nombre": "Desayunos"
     },
     {
       "id": "cafes",
-      "nombre": "Cafés",
-      "grupo": "cafe",
       "nota": "Pregunta por nuestros métodos y cafés seleccionados (Brew Coffee).",
-      "columnas": [
-        {
-          "id": "pequeno",
-          "label": "Pequeño"
-        },
-        {
-          "id": "mediano",
-          "label": "Mediano"
-        },
-        {
-          "id": "grande",
-          "label": "Grande"
-        },
-        {
-          "id": "extragrande",
-          "label": "Extra"
-        }
-      ],
-      "imagen": "/categorias/cafe.webp",
+      "grupo": "cafe",
       "items": [
         {
           "id": "affogato",
@@ -207,9 +245,9 @@
           "id": "americano",
           "nombre": "Americano",
           "precios": {
-            "pequeno": 2,
-            "mediano": 3,
             "grande": 4,
+            "mediano": 3,
+            "pequeno": 2,
             "extragrande": 4.5
           }
         },
@@ -217,9 +255,9 @@
           "id": "capuccino",
           "nombre": "Capuccino",
           "precios": {
-            "pequeno": 2,
-            "mediano": 3,
             "grande": 4,
+            "mediano": 3,
+            "pequeno": 2,
             "extragrande": 4.5
           }
         },
@@ -262,9 +300,9 @@
           "id": "latte",
           "nombre": "Latte",
           "precios": {
-            "pequeno": 2,
-            "mediano": 3,
             "grande": 4,
+            "mediano": 3,
+            "pequeno": 2,
             "extragrande": 4.5
           }
         },
@@ -279,8 +317,8 @@
           "id": "loma-del-viento",
           "nombre": "Loma del Viento",
           "precios": {
-            "mediano": 3,
             "grande": 4,
+            "mediano": 3,
             "extragrande": 4.5
           }
         },
@@ -288,9 +326,9 @@
           "id": "loma-linda-cafe",
           "nombre": "Loma Linda",
           "precios": {
-            "pequeno": 2,
-            "mediano": 3,
             "grande": 4,
+            "mediano": 3,
+            "pequeno": 2,
             "extragrande": 4.5
           }
         },
@@ -301,13 +339,31 @@
             "grande": 6
           }
         }
+      ],
+      "imagen": "/categorias/cafe.webp",
+      "nombre": "Cafés",
+      "columnas": [
+        {
+          "id": "pequeno",
+          "label": "Pequeño"
+        },
+        {
+          "id": "mediano",
+          "label": "Mediano"
+        },
+        {
+          "id": "grande",
+          "label": "Grande"
+        },
+        {
+          "id": "extragrande",
+          "label": "Extra"
+        }
       ]
     },
     {
       "id": "bebidas",
-      "nombre": "Bebidas",
       "grupo": "cafe",
-      "imagen": "/categorias/batido.webp",
       "items": [
         {
           "id": "batidos-frappe",
@@ -332,21 +388,21 @@
         {
           "id": "toddy",
           "nombre": "Toddy",
-          "descripcion": "Frío / Caliente",
-          "precio": 4.5
+          "precio": 4.5,
+          "descripcion": "Frío / Caliente"
         },
         {
           "id": "chocolate-especias",
           "nombre": "Chocolate con Especias",
           "precio": 3
         }
-      ]
+      ],
+      "imagen": "/categorias/batido.webp",
+      "nombre": "Bebidas"
     },
     {
       "id": "pasteleria",
-      "nombre": "Pastelería",
       "grupo": "cafe",
-      "imagen": "/categorias/croissant.webp",
       "items": [
         {
           "id": "arepa-integral",
@@ -373,13 +429,13 @@
           "nombre": "Hojaldre Pollo",
           "precio": 4.5
         }
-      ]
+      ],
+      "imagen": "/categorias/croissant.webp",
+      "nombre": "Pastelería"
     },
     {
       "id": "reposteria",
-      "nombre": "Repostería",
       "grupo": "cafe",
-      "imagen": "/categorias/brownie.webp",
       "items": [
         {
           "id": "alfajor",
@@ -406,14 +462,14 @@
           "nombre": "Torta Mantecada",
           "precio": 2
         }
-      ]
+      ],
+      "imagen": "/categorias/brownie.webp",
+      "nombre": "Repostería"
     },
     {
       "id": "hamburguesas",
-      "nombre": "Hamburguesas",
-      "grupo": "comida",
       "nota": "Todas nuestras hamburguesas llevan jamón, queso amarillo, pepinillos, cebolla, tomate, lechuga y papitas chips.",
-      "imagen": "/categorias/hamburguesa.webp",
+      "grupo": "comida",
       "items": [
         {
           "id": "hb-carne",
@@ -430,12 +486,71 @@
           "nombre": "Pollo Crispy",
           "precio": 7
         }
-      ]
+      ],
+      "imagen": "/categorias/hamburguesa.webp",
+      "nombre": "Hamburguesas"
     },
     {
       "id": "pizzas",
-      "nombre": "Pizzas",
       "grupo": "comida",
+      "items": [
+        {
+          "id": "pz-campesina",
+          "nombre": "Campesina",
+          "precios": {
+            "t1": 7,
+            "t2": 15.5
+          },
+          "descripcion": "Mozzarella, jamón, maíz y pimentón"
+        },
+        {
+          "id": "pz-capressa",
+          "nombre": "Capressa",
+          "precios": {
+            "t1": 6,
+            "t2": 12.5
+          },
+          "descripcion": "Mozzarella, tomate confitado y pesto"
+        },
+        {
+          "id": "pz-hawaiana",
+          "nombre": "Hawaiana",
+          "precios": {
+            "t1": 6,
+            "t2": 12.5
+          },
+          "descripcion": "Mozzarella, jamón y piña"
+        },
+        {
+          "id": "pz-loma-linda",
+          "nombre": "Loma Linda",
+          "precios": {
+            "t1": 10,
+            "t2": 18
+          },
+          "descripcion": "Mozzarella, jamón, champiñones, anchoas y aceitunas negras"
+        },
+        {
+          "id": "pz-margarita",
+          "nombre": "Margarita",
+          "precios": {
+            "t1": 6,
+            "t2": 12.5
+          },
+          "descripcion": "Mozzarella con salsa napolitana"
+        },
+        {
+          "id": "pz-pepperoni",
+          "nombre": "Pepperoni",
+          "precios": {
+            "t1": 7,
+            "t2": 15.5
+          },
+          "descripcion": "Mozzarella, pepperoni y tocineta"
+        }
+      ],
+      "imagen": "/categorias/pizza.webp",
+      "nombre": "Pizzas",
       "columnas": [
         {
           "id": "t1",
@@ -445,70 +560,11 @@
           "id": "t2",
           "label": "Grande"
         }
-      ],
-      "imagen": "/categorias/pizza.webp",
-      "items": [
-        {
-          "id": "pz-campesina",
-          "nombre": "Campesina",
-          "descripcion": "Mozzarella, jamón, maíz y pimentón",
-          "precios": {
-            "t1": 7,
-            "t2": 15.5
-          }
-        },
-        {
-          "id": "pz-capressa",
-          "nombre": "Capressa",
-          "descripcion": "Mozzarella, tomate confitado y pesto",
-          "precios": {
-            "t1": 6,
-            "t2": 12.5
-          }
-        },
-        {
-          "id": "pz-hawaiana",
-          "nombre": "Hawaiana",
-          "descripcion": "Mozzarella, jamón y piña",
-          "precios": {
-            "t1": 6,
-            "t2": 12.5
-          }
-        },
-        {
-          "id": "pz-loma-linda",
-          "nombre": "Loma Linda",
-          "descripcion": "Mozzarella, jamón, champiñones, anchoas y aceitunas negras",
-          "precios": {
-            "t1": 10,
-            "t2": 18
-          }
-        },
-        {
-          "id": "pz-margarita",
-          "nombre": "Margarita",
-          "descripcion": "Mozzarella con salsa napolitana",
-          "precios": {
-            "t1": 6,
-            "t2": 12.5
-          }
-        },
-        {
-          "id": "pz-pepperoni",
-          "nombre": "Pepperoni",
-          "descripcion": "Mozzarella, pepperoni y tocineta",
-          "precios": {
-            "t1": 7,
-            "t2": 15.5
-          }
-        }
       ]
     },
     {
       "id": "submarinos",
-      "nombre": "Submarinos",
       "grupo": "comida",
-      "imagen": "/categorias/submarino.webp",
       "items": [
         {
           "id": "sub-clasico",
@@ -535,13 +591,13 @@
           "nombre": "Pollo",
           "precio": 7
         }
-      ]
+      ],
+      "imagen": "/categorias/submarino.webp",
+      "nombre": "Submarinos"
     },
     {
       "id": "sandwiches",
-      "nombre": "Sándwiches",
       "grupo": "comida",
-      "imagen": "/categorias/sandwich.webp",
       "items": [
         {
           "id": "sw-croissant-choc",
@@ -563,13 +619,13 @@
           "nombre": "Sándwich Full",
           "precio": 6
         }
-      ]
+      ],
+      "imagen": "/categorias/sandwich.webp",
+      "nombre": "Sándwiches"
     },
     {
       "id": "club-house",
-      "nombre": "Club House",
       "grupo": "comida",
-      "imagen": "/categorias/club-house.webp",
       "items": [
         {
           "id": "ch-especial",
@@ -581,13 +637,13 @@
           "nombre": "4 Sabores",
           "precio": 14
         }
-      ]
+      ],
+      "imagen": "/categorias/club-house.webp",
+      "nombre": "Club House"
     },
     {
       "id": "extras",
-      "nombre": "Extras",
       "grupo": "comida",
-      "imagen": "/categorias/papas.webp",
       "items": [
         {
           "id": "ex-chips",
@@ -609,52 +665,15 @@
           "nombre": "Tequeños",
           "precio": 3.5
         }
-      ]
+      ],
+      "imagen": "/categorias/papas.webp",
+      "nombre": "Extras"
     }
   ],
-  "temas": {
-    "naranja": {
-      "fondo": "#F0561C",
-      "tinta": "#120C08",
-      "titulo": "#FFFFFF",
-      "oscuro": "#0F0B09",
-      "claro": "#FFFFFF",
-      "acento": "#0F0B09",
-      "sobre_acento": "#FFFFFF",
-      "etiqueta": "#F0561C"
-    },
-    "negro": {
-      "fondo": "#0F0B09",
-      "tinta": "#F5EFE8",
-      "titulo": "#FFFFFF",
-      "oscuro": "#1C1613",
-      "claro": "#FFFFFF",
-      "acento": "#F0561C",
-      "sobre_acento": "#0F0B09",
-      "etiqueta": "#F0561C"
-    }
+  "suscripcion": {
+    "vence": null,
+    "estado": "activa"
   },
-  "tema_modo": "auto",
-  "tema_par": "naranja",
-  "pedidos": {
-    "activo": true
-  },
-  "local": {
-    "rif": "J-503071770",
-    "direccion": "5ta Avenida (Avenida Francisco Javier García de Hevia), entre las Calles 5 y 6, centro de San Cristóbal, Táchira.",
-    "horario": [
-      {
-        "dias": "Lunes",
-        "horas": "7:00 a. m. – 6:00 p. m."
-      },
-      {
-        "dias": "Martes a sábado",
-        "horas": "8:00 a. m. – 6:00 p. m."
-      },
-      {
-        "dias": "Domingo",
-        "horas": "Cerrado"
-      }
-    ]
-  }
+  "ciudad_frase": "Hecho en el corazón de San Cristóbal",
+  "zona_horaria": "America/Caracas"
 }

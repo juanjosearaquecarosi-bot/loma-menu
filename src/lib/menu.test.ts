@@ -143,12 +143,12 @@ describe('integridad de datos', () => {
   it('enlaces QR apuntan a negocios existentes', () => {
     for (const e of enlaces) expect(e.slug).toBe(n.slug)
   })
-  it('contacto: solo datos entregados por el cliente; Wi-Fi aún no', () => {
+  it('contacto: solo datos entregados por el cliente', () => {
     expect(n.enlaces.whatsapp).toBe('584124215818')
     expect(instagramUrl(n.enlaces.instagram)).toBe('https://instagram.com/lomalindasc')
     expect(urlSegura(n.enlaces.google_review)).toContain('placeid=ChIJebZD3fJtZo4RHmaazlklkPk')
-    expect(n.enlaces.pagos?.map((x) => x.metodo)).toEqual(['Binance Pay', 'Pago Móvil Banesco'])
-    expect(n.enlaces.wifi).toBeUndefined()
+    expect(n.enlaces.pagos?.map((x) => x.metodo)).toEqual(['Binance Pay', 'Pago Móvil Banesco', 'Nequi'])
+    expect(n.enlaces.wifi?.red).toBe('CMURIBANTE')
   })
 })
 
